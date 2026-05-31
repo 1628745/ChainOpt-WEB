@@ -11,16 +11,24 @@ function TerminalLine({ command }: { command: string }) {
   );
 }
 
-export function TerminalBlock({ className }: { className?: string }) {
+type TerminalBlockProps = {
+  commands: string | string[];
+  className?: string;
+};
+
+export function TerminalBlock({ commands, className }: TerminalBlockProps) {
+  const lines = typeof commands === "string" ? [commands] : commands;
+
   return (
     <div
       className={cn(
-        "w-full max-w-lg space-y-2 border border-zinc-800 bg-[#111111] px-5 py-4",
+        "w-full space-y-2 border border-zinc-800 bg-[#111111] px-5 py-4",
         className,
       )}
     >
-      <TerminalLine command="pip install chainopt" />
-      <TerminalLine command="chainopt analyze ./src" />
+      {lines.map((command) => (
+        <TerminalLine key={command} command={command} />
+      ))}
     </div>
   );
 }

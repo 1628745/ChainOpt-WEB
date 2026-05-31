@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { TerminalBlock } from "@/components/terminal-block";
+import { cn } from "@/lib/utils";
 
 export function Hero() {
   return (
@@ -19,14 +20,20 @@ export function Hero() {
           opportunities — with specific evidence from your real runs.
         </p>
 
-        <TerminalBlock className="mt-10" />
+        <TerminalBlock
+          commands={["pip install chainopt", "chainopt analyze ./src"]}
+          className="mt-10 max-w-lg"
+        />
 
-        <Button
-          type="button"
-          className="mt-8 h-11 rounded-none px-6 text-sm font-medium"
+        <a
+          href="#early-access"
+          className={cn(
+            buttonVariants(),
+            "mt-8 h-11 rounded-none px-6 text-sm font-medium no-underline",
+          )}
         >
           Request Early Access
-        </Button>
+        </a>
       </div>
     </section>
   );

@@ -92,6 +92,7 @@
   --section-y-lg: 8rem;
   --content-x: 1.5rem;
   --content-max: 72rem;
+  --header-offset: 0px;
 }
 
 @layer base {
@@ -101,6 +102,12 @@
 
   html {
     @apply font-sans antialiased;
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--header-offset);
+  }
+
+  #early-access {
+    scroll-margin-top: var(--header-offset);
   }
 
   body {

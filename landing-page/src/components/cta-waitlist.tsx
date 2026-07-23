@@ -51,7 +51,7 @@ export function CtaWaitlist() {
           ChainOpt is in private beta
         </h2>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">
-          I&apos;m working with a small group of developers to validate the
+          I&apos;m looking for a small group of early testers to validate the
           analysis engine on real pipelines before a wider release. If you&apos;re
           spending meaningfully on LLM API costs and want early access, reach
           out.

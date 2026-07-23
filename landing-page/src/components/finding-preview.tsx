@@ -111,13 +111,13 @@ export function FindingPreview() {
     <section className="border-t border-zinc-800 px-[var(--content-x)] py-24">
       <div className="mx-auto w-full max-w-[var(--content-max)]">
         <h2 className="text-2xl font-medium tracking-tight text-white">
-          What a finding looks like
+          Here&apos;s what a finding will look like
         </h2>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">
           Every recommendation includes the detection type, similarity scores,
           the number of real runs it was observed in, estimated monthly cost
           savings, and a panel of supporting evidence from your actual pipeline
-          runs.
+          runs. The cards below are illustrative examples.
         </p>
 
         <div className="mt-10 max-w-2xl space-y-3">

@@ -14,10 +14,10 @@ call_order, pipeline_id, file_path, line_number)
 
 ## Track B: CLI analyzer
 
-- Day 1: CLI scaffold, `chainopt analyze ./src`
-- Day 2: file discovery (LangChain/LangGraph signature grep)
-- Day 3-4: Claude API call, structured JSON pipeline map
-- Day 5: output pipeline_map.json + test fixtures
+- [x] Day 1: CLI scaffold, `chainopt analyze ./src`
+- [x] Day 2: file discovery (LangChain/LangGraph signature grep)
+- [x] Day 3-4: Claude API call, structured JSON pipeline map
+- [x] Day 5: output pipeline_map.json + test fixtures
 
 ## Flag engine (days 6-9, needs Track A + B merged)
 

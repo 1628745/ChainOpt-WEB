@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {
+      "id": "classify",
+      "file": "branching_router.py",
+      "line": 23,
+      "inferred_purpose": "routing",
+      "model_if_hardcoded": "gpt-4o-mini"
+    },
+    {
+      "id": "handle_billing",
+      "file": "branching_router.py",
+      "line": 29,
+      "inferred_purpose": "generation",
+      "model_if_hardcoded": "claude-sonnet-4-20250514"
+    },
+    {
+      "id": "handle_tech",
+      "file": "branching_router.py",
+      "line": 34,
+      "inferred_purpose": "generation",
+      "model_if_hardcoded": "gpt-4o"
+    }
+  ],
+  "edges": [
+    {"from": "classify", "to": "handle_billing"},
+    {"from": "classify", "to": "handle_tech"}
+  ]
+}

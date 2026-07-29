@@ -40,6 +40,17 @@ def test_calls_columns_constant_matches_plan():
 
 def test_calls_table_round_trip():
     """Insert, read, and delete a row covering every PLAN.md field."""
+    import os
+
+    if not (
+        os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+    ) or not (
+        os.getenv("SUPABASE_KEY")
+        or os.getenv("SUPABASE_ANON_KEY")
+        or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+    ):
+        pytest.skip("Supabase credentials not configured in this environment")
+
     client = get_client()
     session_id = f"test-day1-{uuid.uuid4().hex[:8]}"
     ts = datetime.now(timezone.utc).isoformat()

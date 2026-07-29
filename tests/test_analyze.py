@@ -181,3 +181,27 @@ def test_parse_pipeline_map_strips_markdown_fences():
     }
     fenced = "```json\n" + json.dumps(payload) + "\n```"
     assert parse_pipeline_map(fenced) == payload
+
+
+def _anthropic_key_available() -> bool:
+    try:
+        from dotenv import load_dotenv
+
+        load_dotenv(ROOT / ".env", override=False)
+        load_dotenv(ROOT / ".env.local", override=False)
+    except ImportError:
+        pass
+    return bool(os.environ.get("ANTHROPIC_API_KEY"))
+
+
+@pytest.mark.skipif(
+    not _anthropic_key_available(),
+    reason="ANTHROPIC_API_KEY not set — skipping live Claude analyze",
+)
+def test_live_claude_analyze_simple_linear(tmp_path: Path):
+    """End-to-end against the real Anthropic API (runs only when key is present)."""
+    expected = _load_expected("simple_linear")
+    out = tmp_path / "pipeline_map.json"
+    result = analyze_directory(FIXTURES / "simple_linear.py", output=out)
+    assert out.is_file()
+    _assert_rough_structure(result, expected)

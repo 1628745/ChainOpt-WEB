@@ -142,7 +142,7 @@ def default_claude_completer(
             "ANTHROPIC_API_KEY is not set. Export it before running `chainopt analyze`."
         )
 
-    model = os.environ.get("CHAINOPT_ANALYZE_MODEL", "claude-sonnet-4-20250514")
+    model = os.environ.get("CHAINOPT_ANALYZE_MODEL", "claude-sonnet-4-5-20250929")
     client = anthropic.Anthropic(api_key=api_key)
     message = client.messages.create(
         model=model,

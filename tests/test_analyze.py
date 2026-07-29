@@ -181,3 +181,51 @@ def test_parse_pipeline_map_strips_markdown_fences():
     }
     fenced = "```json\n" + json.dumps(payload) + "\n```"
     assert parse_pipeline_map(fenced) == payload
+
+
+def _require_anthropic() -> None:
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        pytest.skip("ANTHROPIC_API_KEY not configured in this environment")
+
+
+@pytest.mark.parametrize("stem", FIXTURE_CASES)
+def test_live_claude_analyze_fixture_matches_expected(stem: str, tmp_path: Path):
+    """End-to-end: real Claude call → pipeline_map.json roughly matches fixture."""
+    _require_anthropic()
+    expected = _load_expected(stem)
+    fixture = FIXTURES / f"{stem}.py"
+    out = tmp_path / "pipeline_map.json"
+
+    result = analyze_directory(fixture, output=out)
+
+    assert out.is_file()
+    written = json.loads(out.read_text(encoding="utf-8"))
+    assert written == result
+    _assert_rough_structure(result, expected)
+
+
+def test_live_claude_analyze_directory_cli(tmp_path: Path):
+    """`chainopt analyze` over the fixtures dir with a live Anthropic call."""
+    _require_anthropic()
+    out = tmp_path / "pipeline_map.json"
+    result = _run_chainopt(
+        "analyze",
+        str(FIXTURES),
+        "--output",
+        str(out),
+        cwd=tmp_path,
+    )
+    assert result.returncode == 0, result.stderr
+    data = json.loads(out.read_text(encoding="utf-8"))
+    assert len(data["nodes"]) >= 2
+    assert all(
+        key in data["nodes"][0]
+        for key in ("id", "file", "line", "inferred_purpose", "model_if_hardcoded")
+    )
+    for edge in data["edges"]:
+        assert "from" in edge and "to" in edge
+
+    # Every fixture stem should contribute at least one node whose file basename matches.
+    basenames = {Path(n["file"]).name for n in data["nodes"]}
+    for stem in FIXTURE_CASES:
+        assert f"{stem}.py" in basenames, f"no nodes from {stem}.py in {basenames}"

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chainopt"
+version = "0.1.0"
+description = "ChainOpt SDK — log LLM calls to Supabase for pipeline optimization"
+readme = "CLAUDE.md"
+requires-python = ">=3.9"
+dependencies = [
+    "httpx>=0.27",
+    "supabase>=2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+chainopt = "chainopt.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["sdk"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["sdk"]

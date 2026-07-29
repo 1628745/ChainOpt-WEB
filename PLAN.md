@@ -9,7 +9,7 @@ dashboard, no Stripe, no redundancy or parallelization flag yet.
 completion_tokens, cost, latency_ms, prompt, response, session_id,
 call_order, pipeline_id, file_path, line_number)
 - [x] Day 2-3: httpx transport patch, intercept + log calls to known LLM hosts
-- Day 4: session id + call order tracking
+- [x] Day 4: session id + call order tracking
 - Day 5: `chainopt run --` wrapper and `chainopt.init()` one-liner
 
 ## Track B: CLI analyzer

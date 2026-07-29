@@ -124,6 +124,16 @@ def validate_pipeline_map(data: Any) -> dict[str, Any]:
     return {"nodes": normalized_nodes, "edges": normalized_edges}
 
 
+def _load_env() -> None:
+    """Load project .env files without overriding real environment vars."""
+    try:
+        from dotenv import load_dotenv
+    except ImportError:  # pragma: no cover
+        return
+    load_dotenv(".env", override=False)
+    load_dotenv(".env.local", override=False)
+
+
 def default_claude_completer(
     system_prompt: str, files: Sequence[tuple[str, str]]
 ) -> str:
@@ -133,13 +143,15 @@ def default_claude_completer(
     except ImportError as exc:  # pragma: no cover - dependency declared in pyproject
         raise RuntimeError(
             "The 'anthropic' package is required for `chainopt analyze`. "
-            "Install with: pip install 'chainopt[analyze]' or pip install anthropic"
+            "Install with: pip install anthropic"
         ) from exc
 
+    _load_env()
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         raise RuntimeError(
-            "ANTHROPIC_API_KEY is not set. Export it before running `chainopt analyze`."
+            "ANTHROPIC_API_KEY is not set. Put it in .env or export it before "
+            "running `chainopt analyze`."
         )
 
     model = os.environ.get("CHAINOPT_ANALYZE_MODEL", "claude-sonnet-4-20250514")

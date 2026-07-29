@@ -1,0 +1,33 @@
+---
+description: ChainOpt MVP build rules — scope, tests, commits, stack
+alwaysApply: true
+---
+
+# ChainOpt build rules
+
+MVP only, one flag (oversized model usage). No VS Code extension, no hosted
+dashboard, no Stripe, no redundancy or parallelization flag yet. If a task
+seems to call for one of those, stop and say so in your summary instead of
+building it.
+
+Always:
+- Write or update a test before considering any function done.
+- Run the full test suite before committing. Never commit red.
+- Commit after each PLAN.md item is verified, not in larger batches.
+- Cost numbers always come from real token counts and real Supabase data,
+  never invented.
+- End every session with a plain-English summary: what changed, what test
+  proves it works, what's next in PLAN.md, anything you're unsure about.
+- Stay inside the track you were asked to build. Don't touch /web without
+  being asked.
+
+Stack: Python, Supabase + pgvector, LangChain/LangGraph as the target
+framework, pytest.
+
+Structure:
+/sdk — httpx patch + logging
+/analyzer — CLI static analyzer
+/engine — oversizing flag logic
+/web — already built
+/tests
+PLAN.md — the checklist above, keep it updated

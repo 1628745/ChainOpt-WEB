@@ -40,5 +40,7 @@ yarn-error.log*
 .turbo
 coverage/
 
-# Cursor (local agent state)
-.cursor/
+# Cursor (local agent state); keep shared project rules tracked
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**

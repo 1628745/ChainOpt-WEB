@@ -1,46 +1,31 @@
-# Python
-.venv/
-venv/
+# python
 __pycache__/
 *.py[cod]
-*$py.class
-*.egg-info/
+.venv/
+venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+*.egg-info/
+dist/
+build/
 
-# Node / Next.js
+# node
 node_modules/
 .next/
+.vercel/
 out/
-build/
-dist/
-*.tsbuildinfo
 
-# Environment & secrets
+# env
 .env
-.env.*
-!.env.example
+.env.local
+.env.*.local
 
-# OS & editors
-.DS_Store
+# chainopt
+.chainopt/
+spool/
+
+# editors
 .idea/
-*.swp
-*.swo
-
-# Logs & debug
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Deploy / tooling
-.vercel
-.turbo
-coverage/
-
-# Cursor (local agent state); keep shared project rules tracked
-.cursor/*
-!.cursor/rules/
-!.cursor/rules/**
+.vscode/
+.DS_Store

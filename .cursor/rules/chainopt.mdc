@@ -1,33 +1,38 @@
 ---
-description: ChainOpt MVP build rules — scope, tests, commits, stack
 alwaysApply: true
 ---
 
-# ChainOpt build rules
+# ChainOpt project rules
 
-MVP only, one flag (oversized model usage). No VS Code extension, no hosted
-dashboard, no Stripe, no redundancy or parallelization flag yet. If a task
-seems to call for one of those, stop and say so in your summary instead of
-building it.
+## What this is
+ChainOpt analyzes LLM pipelines and surfaces evidence-backed recommendations for reducing cost and latency. Python SDK + CLI, FastAPI analysis service, Supabase Postgres with pgvector, Next.js dashboard.
 
-Always:
-- Write or update a test before considering any function done.
-- Run the full test suite before committing. Never commit red.
-- Commit after each PLAN.md item is verified, not in larger batches.
-- Cost numbers always come from real token counts and real Supabase data,
-  never invented.
-- End every session with a plain-English summary: what changed, what test
-  proves it works, what's next in PLAN.md, anything you're unsure about.
-- Stay inside the track you were asked to build. Don't touch /web without
-  being asked.
+## Authoritative spec
+The technical spec is docs/SPEC.md. When a task prompt says "per Section N" or "per the masterplan", it means docs/SPEC.md. Read the referenced section before writing code. Do not modify docs/SPEC.md unless a task explicitly says to.
 
-Stack: Python, Supabase + pgvector, LangChain/LangGraph as the target
-framework, pytest.
+## Repo boundaries
+apps/landing/ is the existing marketing site. Never modify, move, refactor, or reference it. It is out of scope for every task.
 
-Structure:
-/sdk — httpx patch + logging
-/analyzer — CLI static analyzer
-/engine — oversizing flag logic
-/web — already built
-/tests
-PLAN.md — the checklist above, keep it updated
+## Non-negotiables
+- Never invent model names, model IDs, or pricing. All of that lives in packages/chainopt/src/chainopt/registry/models.json, which is human-maintained. Read it; never write it. If a model is missing, fail loudly rather than guessing.
+- Never fabricate savings numbers, benchmark results, or test output. If you did not run it, say you did not run it.
+- The SDK must never raise into user code. Every chainopt code path inside the interception layer is wrapped in try/except and degrades to silence.
+- Every task ends with tests that actually run. Paste real command output. Do not write "tests pass" without the output.
+- No new dependencies without stating why in the response.
+
+## Naming contracts
+CallRecord, CallSiteRef, IngestBatch, PipelineGraph, FindingCandidate and their field names are fixed contracts across the SDK, API, and dashboard. Do not rename or "improve" them.
+
+## Style
+- Python 3.10+, ruff, line length 100, full type annotations on public functions, pydantic v2 for all boundary data.
+- Prefer explicit over clever. This code will be read by prospective customers auditing what it collects.
+- No emoji in code, logs, or CLI output.
+- Errors tell the user what to do next, not just what went wrong.
+
+## Testing
+- pytest, respx for httpx mocking, real Postgres for API tests.
+- Every flag detector gets synthetic fixtures with both positive and NEGATIVE cases. A detector without a negative test is not done.
+- Any external API (Anthropic, OpenAI) is injected behind an interface so tests never hit the network.
+
+## Cost discipline
+Static analysis must prefilter deterministically before any LLM call. One LLM request per file, cached by content hash. One adjudication request per flag type per run. If a change would increase LLM calls, say so explicitly.

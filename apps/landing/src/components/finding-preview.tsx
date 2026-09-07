@@ -85,7 +85,7 @@ export function FindingPreview() {
               </div>
 
               <SavingsLine className="mt-4">
-                +$11.40/mo recoverable
+                +$21.40/mo recoverable
               </SavingsLine>
 
               <p className="mt-4 text-[0.95rem] text-muted">

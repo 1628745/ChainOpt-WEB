@@ -32,7 +32,7 @@ const steps: Step[] = [
       {
         command: "chainopt analyze ./src",
         output: [
-          "resolved 6 llm call sites",
+          "resolved 7 call sites across 6 steps",
           "wrote pipeline_map.json",
         ],
       },
@@ -47,7 +47,7 @@ const steps: Step[] = [
         command: "chainopt findings",
         output: [
           "redundancy  step 3 ≈ step 6  +$38.20/mo",
-          "oversizing  step 4 → haiku   +$11.40/mo",
+          "oversizing  step 4 → haiku   +$21.40/mo",
         ],
       },
     ],

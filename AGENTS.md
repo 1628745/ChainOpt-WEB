@@ -1,34 +1,45 @@
 # ChainOpt
 
-See `CLAUDE.md` and `PLAN.md` for the product overview, current MVP scope, and rules.
+ChainOpt analyzes LLM pipelines and surfaces evidence-backed recommendations for
+reducing cost and latency.
 
-## Cursor Cloud specific instructions
+## What is on this branch
 
-The Python package (SDK `/sdk`, CLI analyzer `/cli`, tests `/tests`) is the product
-in the current MVP phase. The dependency-refresh update script creates a virtualenv at
-`.venv` and installs the package editable with dev extras, so use that interpreter.
+`main` was stripped to the marketing site (commit 86fb684). The only application here
+is `apps/landing/` -- a Next.js 16 site. `packages/`, `services/`, `docs/`,
+`supabase/migrations/`, `fixtures/`, and `apps/dashboard/` are empty placeholders.
 
-### Services and how to run them
+The Python SDK, CLI analyzer, FastAPI service, `docs/SPEC.md`, and the model registry
+live on the **`archive/pre-revamp`** branch. Read them there:
 
-- SDK + CLI (`chainopt`). Console entry point installed into `.venv`.
-  - `.venv/bin/chainopt run -- your_script.py` installs the httpx patch, then runs the
-    script so LLM calls (OpenAI/Anthropic hosts) are intercepted and logged.
-  - `.venv/bin/chainopt analyze <dir> --output pipeline_map.json` builds a pipeline map.
-    Non-obvious: when it discovers files referencing LangChain/LangGraph pipelines it
-    calls the Anthropic API and needs `ANTHROPIC_API_KEY`; a directory with no pipeline
-    files produces an empty map with no key (used by the smoke test).
+    git show archive/pre-revamp:docs/SPEC.md
 
-### Test / lint / build
+Project rules are in `.cursor/rules/chainopt.mdc`.
 
-- Tests: `.venv/bin/python -m pytest` (config in `pyproject.toml`; `pythonpath` is set to
-  `sdk` + `cli`, so no manual `PYTHONPATH` is needed when using the venv interpreter).
-- `tests/test_calls_table.py::test_calls_table_round_trip` is skipped unless Supabase creds
-  are set (`SUPABASE_URL` + `SUPABASE_KEY`, or the `NEXT_PUBLIC_*` / `*_ANON_KEY` variants).
-  Everything else runs offline via httpx mock transports and canned completers.
-- There is no Python linter configured; `pytest` is the check for this package.
+## apps/landing
 
-### Out of current MVP scope (do not touch unless asked)
+Next.js 16 (App Router, Turbopack) + React 19 + Tailwind v4. Dark-only marketing
+site with a Supabase-backed waitlist. No component library: every component is
+local to `src/components`, and the only icons are inline SVG.
 
-- `/landing-page` — Next.js 16 marketing site (its own `eslint`/`next` tooling, Node deps
-  not installed by the update script).
-- `/dashboard` — ignored in the current stage.
+The visual system is documented in `apps/landing/README.md` and defined in
+`apps/landing/src/app/globals.css`. Two rules matter more than the rest: colour is
+semantic (amber = a finding, teal = a saving, never decorative, never swapped), and
+the wordmark glyph in `src/components/wordmark.tsx` is frozen -- its hex values are
+part of the mark, not the palette.
+
+    cd apps/landing
+    npm ci
+    npm run dev      # http://localhost:3000
+    npm run build
+    npm run lint     # eslint flat config; `next lint` is removed in Next 16
+
+### Environment
+
+Copy `apps/landing/.env.example` to `.env.local`. The waitlist route needs a Supabase
+project with a `waitlist` table; see `supabase/migrations/`.
+
+### Checks
+
+There is no test suite for the landing page. `npm run build` (which typechecks) and
+`npm run lint` are the checks. Run both before calling a change done.

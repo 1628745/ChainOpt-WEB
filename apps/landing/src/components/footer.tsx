@@ -1,11 +1,14 @@
+import { Wordmark } from "@/components/wordmark";
+
 export function Footer() {
   return (
-    <footer className="border-t border-zinc-800 px-[var(--content-x)] py-8">
-      <div className="mx-auto flex w-full max-w-[var(--content-max)] flex-col gap-4">
-        <span className="font-terminal text-sm text-white">ChainOpt</span>
-        <p className="text-xs text-zinc-600">
-          Built by an independent developer. Not affiliated with LangChain or any
-          LLM provider.
+    <footer className="py-10">
+      <div className="wrap flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <Wordmark size={18} />
+
+        <p className="max-w-[52ch] font-mono text-[0.72rem] leading-relaxed text-muted">
+          built by an independent developer · not affiliated with langchain,
+          openai, anthropic, or any other provider named on this page
         </p>
       </div>
     </footer>

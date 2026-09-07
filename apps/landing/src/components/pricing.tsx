@@ -1,102 +1,106 @@
-import { Button } from "@/components/ui/button";
+import { btn } from "@/components/ui/button";
+import { Badge, Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
-type TierData = {
+type Tier = {
   name: string;
   price: string;
+  note: string;
   features: string[];
-  cta: string;
-  highlighted?: boolean;
-  ctaVariant?: "default" | "outline";
+  variant: "primary" | "ghost";
+  featured?: boolean;
 };
 
-const tiers: TierData[] = [
+const tiers: Tier[] = [
   {
     name: "Free",
     price: "$0",
+    note: "For trying it on one pipeline.",
     features: [
-      "Up to 1,000 LLM calls analyzed per month",
-      "Pipeline map, redundancy detection, model appropriateness analysis",
+      "Up to 1,000 calls analysed each month",
+      "Pipeline map and redundancy detection",
+      "Model-appropriateness checks",
       "Community support",
     ],
-    cta: "Get started free",
-    ctaVariant: "outline",
+    variant: "ghost",
   },
   {
     name: "Pro",
     price: "$49",
+    note: "For pipelines running in production.",
     features: [
-      "Unlimited calls analyzed",
-      "Cost trend history and anomaly alerts",
-      "Parallelization detection",
+      "Unlimited calls analysed",
+      "Parallelisation detection",
+      "Cost trends and anomaly alerts",
       "Priority support",
     ],
-    cta: "Request early access",
-    highlighted: true,
-    ctaVariant: "default",
+    variant: "primary",
+    featured: true,
   },
 ];
 
-function PricingCard({
-  name,
-  price,
-  features,
-  cta,
-  highlighted,
-  ctaVariant = "outline",
-}: TierData) {
+function TierCard({ name, price, note, features, variant, featured }: Tier) {
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-1 flex-col border p-8",
-        highlighted ? "border-[#3b82f6]" : "border-zinc-700",
+        "flex flex-col rounded-panel border p-7",
+        featured
+          ? "border-amber-line-strong panel-surface"
+          : "border-line bg-surface",
       )}
     >
-      <p className="text-sm font-medium text-white">{name}</p>
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="font-mono text-[0.85rem] font-semibold tracking-normal text-muted">
+          {name}
+        </h3>
+        {featured ? <Badge>planned</Badge> : null}
+      </div>
 
-      <p className="mt-4">
-        <span className="text-4xl font-medium tracking-tight text-white">
+      <p className="mt-5 flex items-baseline gap-2">
+        <span className="text-[2.6rem] font-extrabold tracking-[-0.03em] text-text">
           {price}
         </span>
-        <span className="text-zinc-500"> / month</span>
+        <span className="font-mono text-[0.78rem] text-muted">/ month</span>
       </p>
 
-      <ul className="mt-8 flex-1 space-y-3">
+      <p className="mt-2 text-[0.92rem] text-muted">{note}</p>
+
+      <ul className="mt-7 flex-1 space-y-3">
         {features.map((feature) => (
-          <li key={feature} className="flex gap-3 text-sm leading-relaxed">
-            <span className="shrink-0 text-zinc-400" aria-hidden>
-              –
-            </span>
-            <span className="text-zinc-200">{feature}</span>
+          <li key={feature} className="flex gap-3 text-[0.93rem]">
+            <span
+              aria-hidden
+              className={cn(
+                "mt-[5px] size-3 shrink-0 rounded-[3px] border",
+                featured ? "border-amber-line-strong" : "border-line-strong",
+              )}
+            />
+            <span className="text-text">{feature}</span>
           </li>
         ))}
       </ul>
 
-      <Button
-        type="button"
-        variant={ctaVariant}
-        className="mt-8 h-11 w-full rounded-none text-sm font-medium"
-      >
-        {cta}
-      </Button>
+      <a href="#early-access" className={cn(btn({ variant }), "mt-8 w-full")}>
+        Request access
+      </a>
     </div>
   );
 }
 
 export function Pricing() {
   return (
-    <section className="border-t border-zinc-800 px-[var(--content-x)] py-24">
-      <div className="mx-auto w-full max-w-[var(--content-max)]">
-        <h2 className="text-2xl font-medium tracking-tight text-white">
-          Pricing
-        </h2>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-zinc-400">
-          Simple, usage-based. No per-seat pricing, no enterprise tiers.
+    <section id="pricing" className="section border-b border-line">
+      <div className="wrap">
+        <Kicker>pricing</Kicker>
+        <h2 className="mt-5">Usage-based, with no seats to count</h2>
+        <p className="mt-5 max-w-[58ch] text-[0.98rem] text-muted">
+          These are the planned rates for general release. While ChainOpt is in
+          private beta there is nothing to pay and no card to enter.
         </p>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+        <div className="mt-11 grid max-w-[840px] gap-5 md:grid-cols-2">
           {tiers.map((tier) => (
-            <PricingCard key={tier.name} {...tier} />
+            <TierCard key={tier.name} {...tier} />
           ))}
         </div>
       </div>

@@ -1,16 +1,23 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { type FormEvent, useId, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
-type FormStatus = "idle" | "loading" | "success" | "error";
+type Status = "idle" | "loading" | "success" | "error";
 
 export function CtaWaitlist() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<FormStatus>("idle");
+  const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const [botField, setBotField] = useState("");
+  const inputId = useId();
+  const messageId = useId();
+
+  const pending = status === "loading";
+  const done = status === "success";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,14 +28,14 @@ export function CtaWaitlist() {
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, company_website: botField }),
       });
 
       const data: { error?: string } = await response.json();
 
       if (!response.ok) {
         setStatus("error");
-        setMessage(data.error ?? "Something went wrong. Try again.");
+        setMessage(data.error ?? "That didn't go through. Try again.");
         return;
       }
 
@@ -37,70 +44,89 @@ export function CtaWaitlist() {
       setEmail("");
     } catch {
       setStatus("error");
-      setMessage("Something went wrong. Try again.");
+      setMessage("That didn't go through. Check your connection and try again.");
     }
   }
 
   return (
-    <section
-      id="early-access"
-      className="border-t border-zinc-800 px-[var(--content-x)] py-24"
-    >
-      <div className="mx-auto w-full max-w-[var(--content-max)]">
-        <h2 className="max-w-2xl text-2xl font-medium tracking-tight text-white">
-          ChainOpt is in private beta
-        </h2>
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">
-          I&apos;m looking for a small group of early testers to validate the
-          analysis engine on real pipelines before a wider release. If you&apos;re
-          spending meaningfully on LLM API costs and want early access, reach
-          out.
-        </p>
+    <section id="early-access" className="section border-b border-line">
+      <div className="wrap">
+        <div className="max-w-[720px] rounded-feature border border-line panel-surface p-8 sm:p-10">
+          <Kicker>early access</Kicker>
+          <h2 className="mt-5">ChainOpt is in private beta</h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-10 flex max-w-xl flex-col gap-3 sm:flex-row"
-        >
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="you@company.com"
-            required
-            autoComplete="email"
-            disabled={status === "loading" || status === "success"}
-            className={cn(
-              "h-11 min-w-0 flex-1 border border-zinc-700 bg-zinc-900 px-4 font-sans text-sm text-white",
-              "placeholder:text-zinc-500",
-              "outline-none focus-visible:border-[#3b82f6] focus-visible:ring-1 focus-visible:ring-[#3b82f6]",
-              "disabled:cursor-not-allowed disabled:opacity-60",
-            )}
-          />
-          <Button
-            type="submit"
-            disabled={status === "loading" || status === "success"}
-            className="h-11 shrink-0 rounded-none px-6 text-sm font-medium sm:w-auto"
-          >
-            {status === "loading" ? "Sending…" : "Request Access"}
-          </Button>
-        </form>
+          <p className="mt-5 max-w-[58ch] text-[0.98rem] text-muted">
+            I&apos;m looking for a small group of testers to run the analysis
+            engine against real pipelines before a wider release. If your LLM
+            bill is large enough to be worth reducing, put your email in and
+            I&apos;ll get you set up.
+          </p>
 
-        <p className="mt-4 text-sm text-zinc-500">
-          No spam. I&apos;ll reply personally within a few days.
-        </p>
+          <form onSubmit={handleSubmit} className="mt-8">
+            <label htmlFor={inputId} className="sr-only">
+              Work email
+            </label>
 
-        {message ? (
+            <div
+              aria-hidden
+              className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
+            >
+              <label htmlFor={`${inputId}-hp`}>Company website</label>
+              <input
+                id={`${inputId}-hp`}
+                type="text"
+                name="company_website"
+                value={botField}
+                onChange={(event) => setBotField(event.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <input
+                id={inputId}
+                type="email"
+                name="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@company.com"
+                required
+                autoComplete="email"
+                disabled={pending || done}
+                aria-describedby={message ? messageId : undefined}
+                aria-invalid={status === "error" || undefined}
+                className={cn(
+                  "min-w-0 flex-1 rounded-btn border border-line-strong bg-ink px-4 py-[13px] text-[0.95rem] text-text",
+                  "placeholder:text-muted",
+                  "transition-colors duration-150 focus:border-amber",
+                  "disabled:cursor-not-allowed disabled:opacity-60",
+                  status === "error" && "border-amber",
+                )}
+              />
+              <Button type="submit" disabled={pending || done}>
+                {pending ? "Sending" : done ? "Sent" : "Request access"}
+              </Button>
+            </div>
+          </form>
+
+          <p className="mt-4 font-mono text-[0.74rem] text-muted">
+            no newsletter · no sharing your address · replies are personal
+          </p>
+
           <p
+            id={messageId}
+            role={status === "error" ? "alert" : "status"}
+            aria-live={status === "error" ? "assertive" : "polite"}
             className={cn(
-              "mt-3 text-sm",
-              status === "success" ? "text-zinc-300" : "text-red-400",
+              "mt-4 font-mono text-[0.8rem]",
+              !message && "sr-only",
+              status === "error" ? "text-amber" : "text-teal",
             )}
-            role="status"
           >
             {message}
           </p>
-        ) : null}
+        </div>
       </div>
     </section>
   );

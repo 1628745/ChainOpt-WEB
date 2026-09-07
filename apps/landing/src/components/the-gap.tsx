@@ -1,55 +1,81 @@
+import { Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
-type ColumnData = {
-  title: string;
-  description: string;
-  highlighted?: boolean;
+type Row = {
+  category: string;
+  examples?: string;
+  does: string;
+  gap: string;
+  isChainOpt?: boolean;
 };
 
-const columns: ColumnData[] = [
+const rows: Row[] = [
   {
-    title: "Observability tools (Langfuse, Helicone)",
-    description:
-      "Show you what your pipeline costs and where latency lives. Essential, but passive — they don't tell you what to change.",
+    category: "Tracing",
+    examples: "langfuse · helicone",
+    does: "Records every call and totals the bill.",
+    gap: "Reports what happened. Deciding what to change is left to you.",
   },
   {
-    title: "Model selectors (AgentOpt)",
-    description:
-      "Optimize which model handles each step. Narrow scope — doesn't address pipeline structure, redundancy, or call sequencing.",
+    category: "Model routing",
+    examples: "agentopt",
+    does: "Picks a cheaper model for each step.",
+    gap: "Takes the pipeline's shape as given, so duplicated and badly ordered work survives the swap.",
   },
   {
-    title: "ChainOpt",
-    description:
-      "Analyzes your pipeline structure. Flags redundant call pairs with semantic similarity scores. Identifies oversized model usage. Detects parallelization opportunities. Shows you the actual prompt/response evidence behind every finding.",
-    highlighted: true,
+    category: "ChainOpt",
+    examples: "sdk · cli",
+    does: "Reads the pipeline's structure and names the calls to remove, downgrade, or parallelise.",
+    gap: "Each finding cites the prompts and responses behind it, so you can check the reasoning before you touch the code.",
+    isChainOpt: true,
   },
 ];
 
-function Column({ title, description, highlighted }: ColumnData) {
-  return (
-    <div
-      className={cn(
-        "min-w-0",
-        highlighted && "border border-[#3b82f6] bg-[#111111] px-6 py-6 md:px-8",
-      )}
-    >
-      <h3 className="text-sm font-medium leading-snug text-white">{title}</h3>
-      <p className="mt-4 text-sm leading-relaxed text-zinc-400">{description}</p>
-    </div>
-  );
-}
-
 export function TheGap() {
   return (
-    <section className="border-t border-zinc-800 px-[var(--content-x)] py-24">
-      <div className="mx-auto w-full max-w-[var(--content-max)]">
-        <p className="font-terminal text-sm text-zinc-400">WHERE IT FITS</p>
+    <section id="where-it-fits" className="section border-b border-line">
+      <div className="wrap">
+        <Kicker>where it fits</Kicker>
+        <h2 className="mt-5">
+          Knowing the number is not the same as knowing the fix
+        </h2>
 
-        <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
-          {columns.map((column) => (
-            <Column key={column.title} {...column} />
+        <dl className="mt-12 flex flex-col gap-2">
+          {rows.map((row) => (
+            <div
+              key={row.category}
+              className={cn(
+                "grid gap-4 border border-line px-5 py-5 md:grid-cols-[240px_1fr] md:gap-8 md:px-6",
+                row.isChainOpt
+                  ? "rounded-l-none rounded-r-panel border-l-[3px] border-l-amber bg-[linear-gradient(90deg,var(--color-amber-dim),transparent_65%)]"
+                  : "rounded-panel",
+              )}
+            >
+              <dt className="flex flex-col gap-1.5">
+                <span
+                  className={cn(
+                    "text-[1.05rem] font-semibold tracking-[-0.01em]",
+                    row.isChainOpt ? "text-amber" : "text-text",
+                  )}
+                >
+                  {row.category}
+                </span>
+                {row.examples ? (
+                  <span className="font-mono text-[0.74rem] text-muted">
+                    {row.examples}
+                  </span>
+                ) : null}
+              </dt>
+
+              <dd className="grid gap-3 text-[0.95rem] md:grid-cols-2 md:gap-8">
+                <p className="text-text">{row.does}</p>
+                <p className={row.isChainOpt ? "text-text" : "text-muted"}>
+                  {row.gap}
+                </p>
+              </dd>
+            </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

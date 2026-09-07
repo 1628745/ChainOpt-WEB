@@ -9,7 +9,7 @@ import { TheGap } from "@/components/the-gap";
 export default function Home() {
   return (
     <>
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <Hero />
         <TheGap />
         <HowItWorks />

@@ -212,6 +212,41 @@
     animation: savings-rise 0.4s var(--ease-out) 1.4s forwards;
   }
 
+  /*
+   * The headline assembles word by word. Small enough to read as the line
+   * settling into place rather than as an effect -- 8px and 350ms, not a
+   * letter explosion. The dim half keeps its own treatment, since the words
+   * animate inside it rather than around it.
+   */
+  .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: word-in 0.35s var(--ease-out) var(--word-delay, 0s) forwards;
+  }
+
+  .dim {
+    color: var(--color-muted);
+    font-weight: 700;
+  }
+
+  /*
+   * The rest of the left column arrives as one block behind the headline,
+   * rather than each part negotiating its own entrance.
+   */
+  .hero-body {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: word-in 0.35s var(--ease-out) 0.45s forwards;
+  }
+
+  @keyframes word-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @keyframes dag-draw {
     to {
       stroke-dashoffset: 0;
@@ -238,7 +273,9 @@
     }
 
     .dag-reveal,
-    .savings-rise {
+    .savings-rise,
+    .word,
+    .hero-body {
       opacity: 1;
       transform: none;
       animation: none;

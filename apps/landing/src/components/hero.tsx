@@ -1,3 +1,4 @@
+import { CountUp } from "@/components/count-up";
 import { PipelineDiagram } from "@/components/pipeline-diagram";
 import { TerminalBlock } from "@/components/terminal-block";
 import { btn } from "@/components/ui/button";
@@ -51,11 +52,8 @@ export function Hero() {
               </div>
             </div>
 
-            <p
-              data-numeric
-              className="savings-rise absolute -bottom-4 right-4 rounded-chip border border-teal-line bg-teal-dim px-3.5 py-2 font-mono text-[0.8rem] text-teal backdrop-blur-[6px]"
-            >
-              +$38.20/mo recoverable
+            <p className="savings-rise absolute -bottom-4 right-4 rounded-chip border border-teal-line bg-teal-dim px-3.5 py-2 font-mono text-[0.8rem] text-teal backdrop-blur-[6px]">
+              <CountUp amount={38.2} prefix="+$" suffix="/mo recoverable" />
             </p>
           </div>
 

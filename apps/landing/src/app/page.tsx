@@ -1,4 +1,5 @@
 import { CtaWaitlist } from "@/components/cta-waitlist";
+import { Faq } from "@/components/faq";
 import { FindingPreview } from "@/components/finding-preview";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
@@ -15,6 +16,7 @@ export default function Home() {
         <HowItWorks />
         <FindingPreview />
         <Pricing />
+        <Faq />
         <CtaWaitlist />
       </main>
       <Footer />

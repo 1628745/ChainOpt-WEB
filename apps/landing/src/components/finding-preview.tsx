@@ -1,3 +1,4 @@
+import { CostBar } from "@/components/cost-bar";
 import { Evidence } from "@/components/evidence";
 import {
   Badge,
@@ -103,6 +104,9 @@ export function FindingPreview() {
         <p className="mt-5 font-mono text-[0.74rem] text-muted">
           illustrative example · not measured results
         </p>
+
+        {/* The two panels above, stated as one picture. */}
+        <CostBar className="mt-10" />
       </div>
     </section>
   );

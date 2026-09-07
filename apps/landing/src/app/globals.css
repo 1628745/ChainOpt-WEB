@@ -231,6 +231,58 @@
     }
   }
 
+  /*
+   * DAG nodes answer for themselves on hover or focus. The node is not a
+   * control -- it opens nothing and goes nowhere -- so it keeps the default
+   * cursor and only firms up its border.
+   */
+  .dag-node {
+    cursor: default;
+    outline: none;
+  }
+
+  .dag-node-box {
+    stroke: transparent;
+    transition: stroke 0.15s var(--ease-out);
+  }
+
+  .dag-node:hover .dag-node-box,
+  .dag-node:focus-visible .dag-node-box {
+    stroke: var(--color-amber);
+  }
+
+  .dag-tip {
+    animation: dag-tip-in 0.15s var(--ease-out) forwards;
+    transform-origin: center bottom;
+  }
+
+  @keyframes dag-tip-in {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Typed-command caret for the hero demo. */
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    translate: 0 0.16em;
+    background: var(--color-teal);
+    animation: caret-blink 1s steps(1, end) infinite;
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .dag-edge {
       stroke-dashoffset: 0;
@@ -238,9 +290,14 @@
     }
 
     .dag-reveal,
-    .savings-rise {
+    .savings-rise,
+    .dag-tip {
       opacity: 1;
       transform: none;
+      animation: none;
+    }
+
+    .caret {
       animation: none;
     }
   }

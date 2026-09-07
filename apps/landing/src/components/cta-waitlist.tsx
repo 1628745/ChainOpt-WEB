@@ -4,6 +4,8 @@ import { type FormEvent, useId, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/ui/primitives";
+import { btn } from "@/components/ui/button";
+import { bookingUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -113,6 +115,38 @@ export function CtaWaitlist() {
           <p className="mt-4 font-mono text-[0.74rem] text-muted">
             no newsletter · no sharing your address · replies are personal
           </p>
+
+          {/*
+            For a tool at this stage every qualified visitor is worth a
+            conversation, and some people would rather talk than wait for a
+            reply. Absent entirely when no link is configured -- an "or" with
+            nothing after it is worse than no branch at all.
+
+            Linked, not embedded: a scheduling iframe is a large third-party
+            bundle and a tracker on a page whose whole argument is that
+            ChainOpt does not phone home.
+          */}
+          {bookingUrl ? (
+            <>
+              <div
+                aria-hidden
+                className="my-7 flex items-center gap-4 font-mono text-[0.74rem] text-muted"
+              >
+                <span className="h-px flex-1 bg-line" />
+                or
+                <span className="h-px flex-1 bg-line" />
+              </div>
+
+              <a
+                href={bookingUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className={btn({ variant: "ghost" })}
+              >
+                Book a 20-min walkthrough
+              </a>
+            </>
+          ) : null}
 
           <p
             id={messageId}

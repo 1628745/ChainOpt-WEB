@@ -1,3 +1,4 @@
+import { SectionGlow } from "@/components/section-glow";
 import { TerminalBlock } from "@/components/terminal-block";
 import { Kicker } from "@/components/ui/primitives";
 
@@ -56,8 +57,9 @@ const steps: Step[] = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="section border-b border-line">
+    <section id="how-it-works" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
+        <SectionGlow />
         <Kicker>how it works</Kicker>
         <h2 className="mt-5">Three commands from install to first finding</h2>
 

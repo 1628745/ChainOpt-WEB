@@ -1,3 +1,4 @@
+import { SectionGlow } from "@/components/section-glow";
 import { btn } from "@/components/ui/button";
 import { Badge, Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
@@ -89,8 +90,9 @@ function TierCard({ name, price, note, features, variant, featured }: Tier) {
 
 export function Pricing() {
   return (
-    <section id="pricing" className="section border-b border-line">
+    <section id="pricing" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
+        <SectionGlow />
         <Kicker>pricing</Kicker>
         <h2 className="mt-5">Usage-based, with no seats to count</h2>
         <p className="mt-5 max-w-[58ch] text-[0.98rem] text-muted">

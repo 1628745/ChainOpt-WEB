@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionGlow } from "@/components/section-glow";
 import { type FormEvent, useId, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -51,8 +52,9 @@ export function CtaWaitlist() {
   }
 
   return (
-    <section id="early-access" className="section border-b border-line">
+    <section id="early-access" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
+        <SectionGlow />
         <div className="max-w-[720px] rounded-feature border border-line panel-surface p-8 sm:p-10">
           <Kicker>early access</Kicker>
           <h2 className="mt-5">ChainOpt is in private beta</h2>

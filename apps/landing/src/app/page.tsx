@@ -1,3 +1,4 @@
+import { CompatBelt } from "@/components/compat-belt";
 import { CtaWaitlist } from "@/components/cta-waitlist";
 import { Faq } from "@/components/faq";
 import { FindingPreview } from "@/components/finding-preview";
@@ -12,6 +13,7 @@ export default function Home() {
     <>
       <main id="main" className="flex-1">
         <Hero />
+        <CompatBelt />
         <TheGap />
         <HowItWorks />
         <FindingPreview />

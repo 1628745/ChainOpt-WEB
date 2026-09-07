@@ -1,3 +1,4 @@
+import { QUOTES, Testimonial } from "@/components/testimonial";
 import { btn } from "@/components/ui/button";
 import { Badge, Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
@@ -103,6 +104,9 @@ export function Pricing() {
             <TierCard key={tier.name} {...tier} />
           ))}
         </div>
+
+        {/* Renders only once a real quote replaces the placeholder. */}
+        <Testimonial quote={QUOTES.pricing} className="mt-5 max-w-[840px]" />
       </div>
     </section>
   );

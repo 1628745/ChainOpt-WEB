@@ -1,14 +1,29 @@
 import { PipelineDiagram } from "@/components/pipeline-diagram";
 import { TerminalBlock } from "@/components/terminal-block";
 import { btn } from "@/components/ui/button";
-import { Kicker } from "@/components/ui/primitives";
 
 export function Hero() {
   return (
     <section className="border-b border-line py-[72px] sm:py-[104px]">
       <div className="wrap grid items-center gap-14 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
         <div className="min-w-0">
-          <Kicker>llm pipeline analysis</Kicker>
+          {/*
+            The eyebrow replaces the hero kicker rather than stacking above it:
+            two lowercase mono labels in a column would read as one indecisive
+            label. It says what the kicker said -- this is LLM pipeline
+            analysis -- and adds the thing an early-stage product most needs to
+            signal, which is that something is happening and there is a way in.
+          */}
+          <a
+            href="#early-access"
+            className="eyebrow inline-flex items-center gap-2.5 rounded-chip border border-line-strong bg-surface py-1.5 pr-4 pl-3 font-mono text-[0.75rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-text"
+          >
+            <span
+              aria-hidden
+              className="size-1.5 shrink-0 rounded-chip bg-amber shadow-[0_0_0_3px_var(--color-amber-dim)]"
+            />
+            private beta · now accepting testers
+          </a>
 
           <h1 className="mt-6">
             <span className="font-bold text-muted">

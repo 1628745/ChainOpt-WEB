@@ -212,6 +212,23 @@
     animation: savings-rise 0.4s var(--ease-out) 1.4s forwards;
   }
 
+  /*
+   * The eyebrow leads the page in, 150ms ahead of the graph beginning to
+   * draw, so the sequence reads top to bottom rather than everything at once.
+   */
+  .eyebrow {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: eyebrow-in 0.3s var(--ease-out) 0.15s forwards;
+  }
+
+  @keyframes eyebrow-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @keyframes dag-draw {
     to {
       stroke-dashoffset: 0;
@@ -238,7 +255,8 @@
     }
 
     .dag-reveal,
-    .savings-rise {
+    .savings-rise,
+    .eyebrow {
       opacity: 1;
       transform: none;
       animation: none;

@@ -1,4 +1,5 @@
 import { CostBar } from "@/components/cost-bar";
+import { CountUp } from "@/components/count-up";
 import { Evidence } from "@/components/evidence";
 import { SectionGlow } from "@/components/section-glow";
 import { QUOTES, Testimonial } from "@/components/testimonial";
@@ -54,7 +55,11 @@ export function FindingPreview() {
               </div>
 
               <SavingsLine className="mt-4">
-                +$38.20/mo recoverable
+                <CountUp
+                  amount={38.2}
+                  prefix="+$"
+                  suffix="/mo recoverable"
+                />
               </SavingsLine>
 
               <p className="mt-4 max-w-[58ch] text-[0.95rem] text-muted">
@@ -89,7 +94,11 @@ export function FindingPreview() {
               </div>
 
               <SavingsLine className="mt-4">
-                +$21.40/mo recoverable
+                <CountUp
+                  amount={21.4}
+                  prefix="+$"
+                  suffix="/mo recoverable"
+                />
               </SavingsLine>
 
               <p className="mt-4 text-[0.95rem] text-muted">

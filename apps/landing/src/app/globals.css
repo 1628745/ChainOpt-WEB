@@ -212,103 +212,6 @@
     animation: savings-rise 0.4s var(--ease-out) 1.4s forwards;
   }
 
-  /*
-   * The compatibility belt. One cycle carries the run left by exactly one
-   * copy of the list, so the motion is seamless; 40s is slow enough to read a
-   * name in passing and slow enough not to pull the eye off the headline.
-   */
-  /*
-   * Names dissolve at both ends rather than being cut off mid-word, which
-   * would read as a clipping bug rather than as a belt -- and keeps a
-   * half-word from butting up against the static label.
-   */
-  .belt-track {
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 40px,
-      black calc(100% - 40px),
-      transparent
-    );
-  }
-
-  .belt-run {
-    animation: belt-scroll 40s linear infinite;
-  }
-
-  .belt:hover .belt-run {
-    animation-play-state: paused;
-  }
-
-  @keyframes belt-scroll {
-    to {
-      transform: translateX(var(--belt-shift, -12.5%));
-   * Section illumination. Deliberately under the threshold where amber reads
-   * as a colour: 7% at the centre, blurred across 40px, so the section comes
-   * forward without the body copy taking a tint. Sits at z-index -1 inside an
-   * isolated stacking context, so it cannot escape behind the section ground
-   * or paint over the text it sits beneath.
-   */
-  .section-glow {
-    position: absolute;
-    top: -56px;
-    left: -96px;
-    z-index: -1;
-    width: 320px;
-    height: 320px;
-    border-radius: var(--radius-chip);
-    background: radial-gradient(
-      closest-side,
-      rgba(255, 178, 36, 0.07),
-      transparent
-    );
-    filter: blur(40px);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.6s var(--ease-out);
-  }
-
-  .section-glow.is-lit {
-    opacity: 1;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .section-glow {
-   * Cost bars grow from nothing to their share of the current bill. Width
-   * rather than transform, because the bar has to actually take up the space
-   * it claims -- a scaled bar would distort its own border and its label.
-   */
-  .cost-fill {
-    width: 0;
-    /* A zero-width bar with a 1px border either side is still a visible 2px
-       sliver, so the border arrives with the bar rather than before it. */
-    border-color: transparent;
-    transition:
-      width 0.7s var(--ease-out) var(--delay, 0s),
-      border-color 0.7s var(--ease-out) var(--delay, 0s);
-  }
-
-  .cost-fill[data-lit] {
-    width: var(--to);
-    border-color: var(--color-teal-line);
-  }
-
-  .cost-waste {
-    width: 0;
-    transition: width 0.7s var(--ease-out) var(--delay, 0s);
-  }
-
-  .cost-waste[data-lit] {
-    width: var(--to);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .cost-fill,
-    .cost-waste {
-      transition: none;
-    }
-  }
-
   @keyframes dag-draw {
     to {
       stroke-dashoffset: 0;
@@ -328,6 +231,58 @@
     }
   }
 
+  /*
+   * DAG nodes answer for themselves on hover or focus. The node is not a
+   * control -- it opens nothing and goes nowhere -- so it keeps the default
+   * cursor and only firms up its border.
+   */
+  .dag-node {
+    cursor: default;
+    outline: none;
+  }
+
+  .dag-node-box {
+    stroke: transparent;
+    transition: stroke 0.15s var(--ease-out);
+  }
+
+  .dag-node:hover .dag-node-box,
+  .dag-node:focus-visible .dag-node-box {
+    stroke: var(--color-amber);
+  }
+
+  .dag-tip {
+    animation: dag-tip-in 0.15s var(--ease-out) forwards;
+    transform-origin: center bottom;
+  }
+
+  @keyframes dag-tip-in {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Typed-command caret for the hero demo. */
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    translate: 0 0.16em;
+    background: var(--color-teal);
+    animation: caret-blink 1s steps(1, end) infinite;
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .dag-edge {
       stroke-dashoffset: 0;
@@ -335,20 +290,15 @@
     }
 
     .dag-reveal,
-    .savings-rise {
+    .savings-rise,
+    .dag-tip {
       opacity: 1;
       transform: none;
       animation: none;
     }
 
-    /* A belt that cannot move is just a list, so show one copy of it. */
-    .belt-run {
+    .caret {
       animation: none;
-      transform: none;
-    }
-
-    .belt-run > *:not(:first-child) {
-      display: none;
     }
   }
 }

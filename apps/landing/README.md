@@ -40,7 +40,9 @@ so the list is not exposed to the browser.
 
 ## Design system
 
-`src/app/globals.css` is the single source of visual truth. Colour, radius, and
+`CHAINOPT_THEME.md` is the written source of truth and `src/app/globals.css`
+is its implementation. Read the theme guide before any UI work; the summary
+below is orientation, not a substitute. Colour, radius, and
 rhythm are CSS custom properties exposed to Tailwind through `@theme inline`, so
 components reference semantic names and never raw values.
 

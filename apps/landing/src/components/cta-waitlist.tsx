@@ -99,7 +99,7 @@ export function CtaWaitlist() {
                 className={cn(
                   "min-w-0 flex-1 rounded-btn border border-line-strong bg-ink px-4 py-[13px] text-[0.95rem] text-text",
                   "placeholder:text-muted",
-                  "transition-colors duration-150 focus:border-amber",
+                  "transition-colors duration-150 ease-out focus:border-amber",
                   "disabled:cursor-not-allowed disabled:opacity-60",
                   status === "error" && "border-amber",
                 )}

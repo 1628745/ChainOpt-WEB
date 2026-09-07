@@ -21,7 +21,7 @@ export function SiteHeader() {
             <a
               key={link.href}
               href={link.href}
-              className="rounded-sm text-[0.9rem] text-muted transition-colors duration-150 hover:text-text"
+              className="rounded-sm text-[0.9rem] text-muted transition-colors duration-150 ease-out hover:text-text"
             >
               {link.label}
             </a>

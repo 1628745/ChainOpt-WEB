@@ -1,0 +1,219 @@
+# ChainOpt Design System — Theme Guide
+
+Single source of truth for visual styling across the ChainOpt marketing site and
+product UI. Follow it exactly. Where a situation isn't covered, extrapolate from
+the principles here rather than inventing new patterns.
+
+The implementation lives in `src/app/globals.css`; this document is why it looks
+the way it does.
+
+## 1. Core principles
+
+1. **The page should read like the product's own UI.** ChainOpt is a developer
+   tool that analyses LLM pipelines. Marketing surfaces borrow the product's
+   visual vocabulary: terminal blocks, dashboard panels, metric chips, monospace
+   data labels.
+2. **Colour is semantic, never decorative.** Amber means "finding / waste / act
+   on this". Teal means "savings / recovered value / positive outcome". Never
+   use either as decoration, and never swap their meanings.
+3. **One orchestrated motion moment per page.** Everything else is quiet
+   micro-transitions. No scroll-jacking, no parallax, no floating elements.
+4. **The wordmark and logo glyph are frozen.** Never restyle, recolour, or
+   regenerate them (see §8).
+
+## 2. Colour tokens
+
+Defined once in `globals.css` and exposed to Tailwind through `@theme inline`.
+**Never hardcode a colour in a component** — reference the token.
+
+| Token | Value | Role |
+| --- | --- | --- |
+| `--color-ink` | `#0C1220` | Page background. Deep navy, not black. |
+| `--color-surface` | `#121B2C` | Panels, cards, terminal blocks. |
+| `--color-surface-2` | `#182338` | Nested surfaces: chips, inner blocks, DAG nodes. |
+| `--color-line` | `rgba(150,172,220,.15)` | Default borders, dividers. |
+| `--color-line-strong` | `rgba(150,172,220,.28)` | Emphasised borders, ghost buttons. |
+| `--color-text` | `#E9EEF8` | Primary text. |
+| `--color-muted` | `#94A2BD` | Secondary text, labels, metadata. |
+| `--color-amber` | `#FFB224` | PRIMARY accent: findings, warnings, CTAs. |
+| `--color-amber-dim` | `rgba(255,178,36,.14)` | Amber wash backgrounds. |
+| `--color-amber-line` | `rgba(255,178,36,.35)` | Amber badge borders. |
+| `--color-amber-line-strong` | `rgba(255,178,36,.45)` | Pro card border, list markers. |
+| `--color-teal` | `#3ADFC5` | SECONDARY accent: savings, positive indicators. |
+| `--color-teal-dim` | `rgba(58,223,197,.12)` | Teal wash backgrounds. |
+| `--color-teal-line` | `rgba(58,223,197,.3)` | Teal borders. |
+| `--color-nav` | `rgba(12,18,32,.82)` | Sticky nav wash, behind a 12px blur. |
+
+**Fixed literals** — the only values permitted directly in a component:
+
+| Value | Where |
+| --- | --- |
+| `#1a1204` | Text on amber-filled buttons. A near-black warm brown, never pure black. |
+| `#ffc14d` | Hover state of amber-filled buttons. |
+| `#0F1626` | Dark end of the panel gradient (see `.panel-surface`). |
+
+**Semantic assignment:**
+
+- **Amber:** primary CTAs, nav CTA, finding/redundancy badges, flagged DAG nodes
+  and edges, the kicker dot, focus rings, hover accents on interactive borders,
+  the highlighted "ChainOpt" comparison row, the Pro pricing card border,
+  selection highlight.
+- **Teal:** savings amounts, savings chips and lines, "oversizing"-class
+  secondary badges, the terminal prompt `$`, positive/matched evidence labels.
+- The two never sit adjacent at full saturation. The `-dim` washes may.
+- Text on amber fill is `#1a1204`. Teal is never a solid fill behind text — text
+  on a teal wash is teal itself.
+- `::selection { background: var(--color-amber); color: #1a1204; }`
+
+## 3. Typography
+
+Two families. Archivo carries display and body; IBM Plex Mono carries anything
+the product would print as data.
+
+| Element | Family | Size | Weight | Tracking | Line height |
+| --- | --- | --- | --- | --- | --- |
+| H1 | Archivo | `clamp(2.1rem, 4.6vw, 3.3rem)` | 800 | −0.03em | 1.08 |
+| H2 | Archivo | `clamp(1.7rem, 3.4vw, 2.4rem)` | 700 | −0.02em | 1.15 |
+| H3 (card/step titles) | Archivo | 1.05–1.2rem | 600 | −0.01em | default |
+| Body | Archivo | 16px | 400 | 0 | 1.6 |
+| Subtext / section intro | Archivo | 0.95–1.08rem, muted | 400 | 0 | 1.6 |
+| Kicker labels | IBM Plex Mono | 0.8rem | 400 | +0.02em | — |
+| Terminal / code | IBM Plex Mono | 0.83–0.9rem | 400 | 0 | — |
+| Metric chips, footnotes, frame labels | IBM Plex Mono | 0.7–0.78rem | 400–600 | 0 | — |
+
+**Rules:**
+
+- Headlines may split into strong/soft halves with a muted 700-weight span.
+- H2 caps at 22ch. Body and intro copy at 50–64ch. Text never runs the full
+  container width.
+- Section labels ("kickers") are **lowercase monospace**, never ALL-CAPS, each
+  prefixed with an 8px amber dot glowing on
+  `box-shadow: 0 0 0 4px var(--color-amber-dim)`.
+- Numbers and data render in mono. Pricing figures are the exception: Archivo
+  800, −0.03em.
+- Never append arrows to button labels. Arrows appear only inside terminal
+  output lines, as literal CLI output.
+
+## 4. Layout & spacing
+
+- `.wrap` — `max-width: 1120px`, `padding-inline: 28px` (20px at ≤640px).
+- `.section` — `padding-block: 96px` (64px at ≤640px).
+- **Breakpoints:** exactly two. 940px (`md:`, grids collapse to one column) and
+  640px (`sm:`, spacing shrinks, pricing stacks, non-CTA nav links hide).
+  Tailwind's `lg`/`xl`/`2xl` are reset to `initial` so nothing drifts past them.
+- **Alignment:** everything is left-aligned. No centred hero, no centred section
+  headers.
+- **Grids:** hero `minmax(0,1.05fr) minmax(0,.95fr)`; steps `56px 1fr 380px`;
+  finding cards `1.25fr .75fr` (one dominant panel plus one supporting, never
+  equal twins); comparison rows `240px 1fr` full-width and stacked, not a card
+  trio.
+- **Radii:** panels 14px, large feature panels 18px, terminal blocks 12px,
+  buttons 10px, nav CTA 9px, inner blocks and metrics 8px, chips and badges
+  fully rounded (999px).
+- **Nav:** sticky, 66px, `--color-nav` behind `backdrop-filter: blur(12px)`,
+  bottom border `--color-line`.
+
+## 5. Component recipes
+
+**Buttons.** Two variants, no third. Primary is amber fill with `#1a1204` text
+(hover `#ffc14d`); ghost is a `--color-line-strong` border on transparent, with
+border and text going amber on hover. Both translate down 1px on `:active`.
+
+**Terminal blocks.** `--color-surface`, `--color-line` border, 12px radius, mono
+0.83–0.9rem. Prompt `$` in teal, command in text, output lines muted.
+Interactive ones carry a corner copy button: mono 0.72rem, `--color-line`
+border, turning amber on hover.
+
+**Panels.** Three zones, always: a **head** (flex row, badge left, metadata
+right, mono 0.75rem muted, bottom border), a **body**, and a **foot** naming the
+detection mechanism (mono 0.7rem muted, top border). Ground is `.panel-surface`.
+
+**Badges.** Pill, mono 0.7rem 600. Amber: `--color-amber-dim` fill, amber text,
+`--color-amber-line` border. Teal: the same construction in teal.
+
+**Metric chips.** `--color-surface-2` fill, `--color-line` border, 8px radius,
+mono 0.74rem. Label muted, value in `<b>` in `--color-text`.
+
+**Savings indicators.** Inline line: mono ~0.95rem teal on `--color-teal-dim`,
+`--color-teal-line` border, 10px radius. Floating hero chip: same colours, pill
+radius, absolutely positioned, animating in.
+
+**Highlighted comparison row.** `border-left: 3px solid var(--color-amber)`,
+background `linear-gradient(90deg, var(--color-amber-dim), transparent 65%)`,
+rounded on the right only, amber title, full-brightness body text (competitor
+rows keep muted body text).
+
+**Pricing cards.** Two columns, max-width 840px. The Pro card takes
+`--color-amber-line-strong` for its border and its list markers. Markers are
+12px rounded squares, not checkmarks or dots.
+
+**Forms.** Inputs sit on `--color-ink` (darker than the panel around them), with
+a `--color-line-strong` border, 10px radius, 13px/16px padding, muted
+placeholder.
+
+## 6. Motion
+
+- **Curves.** Two, and only two:
+  - `--ease-out: cubic-bezier(0.16, 1, 0.3, 1)` — entrances, reveals, draws.
+  - `--ease-inout: cubic-bezier(0.65, 0, 0.35, 1)` — moves and morphs between
+    two states an element already had.
+
+  These override Tailwind's built-in `ease-out` / `ease-in-out` utilities, so
+  every transition on the site lands on the same curves.
+- **Durations.** Entrances 250–400ms. No single transition exceeds 700ms.
+  Micro-interactions (hover colour, border) stay at 150ms.
+- **The one orchestrated moment.** The hero pipeline DAG draws its edges on load
+  via `stroke-dashoffset` (0.7s per edge, 0.12s stagger), then the flagged
+  redundancy resolves at ~1.2s, then the savings chip rises at ~1.4s. That is
+  the entire show.
+- **Accordions.** `max-height: 0; overflow: hidden`, transitioned over 350ms
+  against a measured `scrollHeight`.
+- **Scroll-triggered effects**, where used, must be subtle and fire once — never
+  re-trigger on scroll up. No scroll-jacking, no parallax, no 3D.
+- **Never add:** parallax, hover lift/scale on cards, background particles,
+  animated gradients.
+- **Always honour reduced motion.** Under `prefers-reduced-motion: reduce`,
+  every animation skips to its end state immediately.
+
+## 7. Interaction states
+
+- **Focus:** `outline: 2px solid var(--color-amber); outline-offset: 2px` on
+  every interactive element, via a global `:focus-visible`.
+- **Hover:** ghost buttons and interactive borders go amber. Links go muted to
+  text. Amber fills go `#ffc14d`.
+- **Active:** buttons translate down 1px. No scale transforms.
+
+## 8. Brand marks — do not touch
+
+The wordmark is the string `chainopt` in IBM Plex Mono 600, paired with the node
+glyph: an amber filled circle (`#FFB224`) joined by grey strokes (`#94A2BD`) to
+two outlined circles (teal `#3ADFC5` and grey `#94A2BD`). **These hex values are
+part of the mark and do not re-theme with the palette.** If the palette changes,
+the logo colours stay exactly as they are. Never regenerate, recolour, restroke,
+or replace the glyph or wordmark. It lives in `src/components/wordmark.tsx` at
+20px in the nav and 18px in the footer.
+
+## 9. Content & voice
+
+- Kickers and metadata are lowercase. Body copy is sentence case. No ALL-CAPS.
+- Data separators inside mono strings use `·`: `step 1 · haiku`,
+  `langfuse · helicone`. Mono data strings only, never prose.
+- Findings are evidence-first: every claim is paired with similarity scores, run
+  counts, or dollar amounts in metric chips.
+- Dollar amounts follow `$38.20 / month` or `+$38.20/mo recoverable`.
+- Never invent model names, model IDs, or pricing. Never present illustrative
+  figures as measured results — label them
+  `illustrative example · not measured results`.
+
+## 10. Checklist for new UI work
+
+- [ ] No hardcoded colours outside the fixed literals in §2
+- [ ] Amber = findings/CTA, teal = savings; no semantic drift, no decoration
+- [ ] All data and labels in IBM Plex Mono, all prose in Archivo
+- [ ] Left-aligned, text constrained to a readable measure
+- [ ] Kickers lowercase mono with the amber dot; no ALL-CAPS, no arrows in buttons
+- [ ] Transitions on `--ease-out` / `--ease-inout`, within the duration budget
+- [ ] `:focus-visible` amber ring on every interactive element
+- [ ] `prefers-reduced-motion` honoured for anything animated
+- [ ] Logo and wordmark untouched, original hex values intact
+- [ ] Verified at 1280px, 940px, and 375px, with no horizontal overflow

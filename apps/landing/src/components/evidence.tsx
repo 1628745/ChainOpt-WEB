@@ -39,7 +39,7 @@ export function Evidence({ items, note }: { items: Item[]; note: string }) {
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-4 rounded-inner border border-line bg-surface-2 px-3.5 py-2.5 font-mono text-[0.76rem] text-muted transition-colors duration-150 hover:border-amber hover:text-amber"
+        className="flex w-full items-center justify-between gap-4 rounded-inner border border-line bg-surface-2 px-3.5 py-2.5 font-mono text-[0.76rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-amber"
       >
         {open ? "hide the evidence" : "show the evidence"}
         <svg

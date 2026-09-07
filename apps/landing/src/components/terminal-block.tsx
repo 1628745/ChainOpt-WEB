@@ -50,7 +50,7 @@ export function TerminalBlock({
         <button
           type="button"
           onClick={copy}
-          className="absolute top-2.5 right-2.5 rounded-inner border border-line px-2 py-1 font-mono text-[0.72rem] text-muted transition-colors duration-150 hover:border-amber hover:text-amber"
+          className="absolute top-2.5 right-2.5 rounded-inner border border-line px-2 py-1 font-mono text-[0.72rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-amber"
         >
           {copied ? "copied" : "copy"}
         </button>

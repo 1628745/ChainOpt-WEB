@@ -39,6 +39,11 @@
   /* The nav sits over the page on a blurred wash of the ink itself. */
   --color-nav: rgba(12, 18, 32, 0.82);
 
+  /* Easing. These override Tailwind's built-in `ease-out` / `ease-in-out`
+     utilities, so every transition on the site lands on the same two curves. */
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-inout);
+
   /* Radii, per component class */
   --radius-inner: 8px;
   --radius-cta: 9px;
@@ -59,6 +64,15 @@
 
 :root {
   color-scheme: dark;
+
+  /*
+   * Two curves, and only two. --ease-out is for anything arriving (entrances,
+   * reveals, draws); --ease-inout is for anything moving between two states it
+   * already had. Entrances run 250-400ms and never exceed 700ms; hover-scale
+   * micro-interactions stay at 150ms.
+   */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
 
   --header-h: 66px;
   --wrap-max: 1120px;
@@ -184,19 +198,18 @@
   .dag-edge {
     stroke-dasharray: var(--edge-len, 200);
     stroke-dashoffset: var(--edge-len, 200);
-    animation: dag-draw 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--edge-delay, 0s)
-      forwards;
+    animation: dag-draw 0.7s var(--ease-out) var(--edge-delay, 0s) forwards;
   }
 
   .dag-reveal {
     opacity: 0;
-    animation: dag-fade 0.45s ease var(--reveal-delay, 1.2s) forwards;
+    animation: dag-fade 0.4s var(--ease-out) var(--reveal-delay, 1.2s) forwards;
   }
 
   .savings-rise {
     opacity: 0;
     transform: translateY(8px);
-    animation: savings-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.4s forwards;
+    animation: savings-rise 0.4s var(--ease-out) 1.4s forwards;
   }
 
   @keyframes dag-draw {

@@ -1,3 +1,4 @@
+import { KineticHeadline } from "@/components/kinetic-headline";
 import { PipelineDiagram } from "@/components/pipeline-diagram";
 import { TerminalBlock } from "@/components/terminal-block";
 import { btn } from "@/components/ui/button";
@@ -25,21 +26,22 @@ export function Hero() {
             private beta · now accepting testers
           </a>
 
-          <h1 className="mt-6">
-            <span className="font-bold text-muted">
-              Your traces show what the pipeline cost.
-            </span>{" "}
-            ChainOpt shows which calls to cut.
-          </h1>
+          <KineticHeadline
+            className="mt-6"
+            segments={[
+              { text: "Your traces show what the pipeline cost.", dim: true },
+              { text: "ChainOpt shows which calls to cut." },
+            ]}
+          />
 
-          <p className="mt-6 max-w-[56ch] text-[1.05rem] text-muted">
+          <p className="hero-body mt-6 max-w-[56ch] text-[1.05rem] text-muted">
             A Python SDK and CLI that reads your LLM agent pipeline, then points
             at the calls wasting money: duplicated work, models larger than the
             task needs, and steps that could have run in parallel. Every finding
             carries the prompts and responses it came from.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div className="hero-body mt-9 flex flex-wrap items-center gap-3">
             <a href="#early-access" className={btn()}>
               Request access
             </a>
@@ -48,7 +50,10 @@ export function Hero() {
             </a>
           </div>
 
-          <TerminalBlock lines="pip install chainopt" className="mt-7 max-w-[22rem]" />
+          <TerminalBlock
+            lines="pip install chainopt"
+            className="hero-body mt-7 max-w-[22rem]"
+          />
         </div>
 
         {/* The visual half: the product's own output, mid-analysis. */}

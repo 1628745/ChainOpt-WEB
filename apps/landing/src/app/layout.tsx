@@ -53,6 +53,13 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${archivo.variable} ${ibmPlexMono.variable}`}
+      /*
+       * Next 16 stopped overriding `scroll-behavior` during navigation. This
+       * attribute opts back in, so a future route change lands instantly while
+       * the in-page anchor links keep scrolling smoothly.
+       * See node_modules/next/dist/docs/01-app/02-guides/upgrading/version-16.md
+       */
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <body className="flex min-h-dvh flex-col">

@@ -1,3 +1,4 @@
+import { SectionGlow } from "@/components/section-glow";
 import { Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
@@ -33,8 +34,9 @@ const rows: Row[] = [
 
 export function TheGap() {
   return (
-    <section id="where-it-fits" className="section border-b border-line">
+    <section id="where-it-fits" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
+        <SectionGlow />
         <Kicker>where it fits</Kicker>
         <h2 className="mt-5">
           Knowing the number is not the same as knowing the fix

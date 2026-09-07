@@ -1,3 +1,4 @@
+import { SectionGlow } from "@/components/section-glow";
 import { Evidence } from "@/components/evidence";
 import {
   Badge,
@@ -23,8 +24,9 @@ const evidence = [
 
 export function FindingPreview() {
   return (
-    <section id="finding" className="section border-b border-line">
+    <section id="finding" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
+        <SectionGlow />
         <Kicker>a finding</Kicker>
         <h2 className="mt-5">What a finding actually looks like</h2>
         <p className="mt-5 max-w-[62ch] text-[0.98rem] text-muted">

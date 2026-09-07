@@ -2,20 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { CountUp } from "@/components/count-up";
+import { KineticHeadline } from "@/components/kinetic-headline";
 import { PipelineDiagram } from "@/components/pipeline-diagram";
 import { btn } from "@/components/ui/button";
-import { Kicker } from "@/components/ui/primitives";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 
 /**
  * The hero as a runnable demo rather than a picture of one.
  *
- * Pressing run types the analyze command, streams the two lines the CLI would
- * print, and only then replays the pipeline graph -- so a first-time reader
- * watches the product work in the order it actually works, on one screen.
+ * On load the graph draws itself once -- the signature moment the page has
+ * always opened with. Pressing run then replays it properly: the analyze
+ * command types out, the two lines the CLI would print stream in, and only
+ * then does the graph redraw. A first-time reader watches the pipeline resolve
+ * in the order it actually resolves, on one screen, without leaving the page.
  *
  * The terminal and the graph sit in different grid columns but are one
- * machine, which is why they share a component: the graph must not start
+ * machine, which is why they share a component: the graph must not begin
  * drawing until the command that produces it has finished printing.
  */
 
@@ -26,15 +29,30 @@ const OUTPUT_GAP_MS = 400;
 
 /** How long the graph takes to finish its own show. See `globals.css`. */
 const DAG_SETTLE_MS = 1900;
+/** When the savings chip lands, and so when its figure should count. */
+const CHIP_MS = 1400;
 
-type Phase = "idle" | "typing" | "output-1" | "output-2" | "running" | "done";
+type Phase =
+  | "initial"
+  | "typing"
+  | "output-1"
+  | "output-2"
+  | "running"
+  | "done";
 
 export function HeroDemo() {
   const reduced = useReducedMotion();
-  const [phase, setPhase] = useState<Phase>("idle");
+  const [phase, setPhase] = useState<Phase>("initial");
   const [typed, setTyped] = useState("");
-  /** Bumping this remounts the graph, which restarts its CSS animations. */
-  const [run, setRun] = useState(0);
+  /** Bumping this remounts the graph, which resets its CSS animations. */
+  const [mount, setMount] = useState(0);
+  /**
+   * Increments each time the graph actually begins drawing -- on load, and at
+   * the start of every replay. The chip's figure counts off this rather than
+   * off the click, so the number moves as the chip arrives rather than three
+   * seconds earlier behind an invisible element.
+   */
+  const [draw, setDraw] = useState(1);
   const [hasRun, setHasRun] = useState(false);
   const timers = useRef<number[]>([]);
 
@@ -53,12 +71,13 @@ export function HeroDemo() {
     timers.current.forEach(window.clearTimeout);
     timers.current = [];
     setHasRun(true);
-    setRun((n) => n + 1);
+    setMount((n) => n + 1);
 
     if (reduced) {
       // Nothing to watch unfold: land on the finished state directly.
       setTyped(COMMAND);
       setPhase("done");
+      setDraw((n) => n + 1);
       return;
     }
 
@@ -72,36 +91,63 @@ export function HeroDemo() {
     const typedAt = COMMAND.length * TYPE_MS;
     after(typedAt + OUTPUT_GAP_MS, () => setPhase("output-1"));
     after(typedAt + OUTPUT_GAP_MS * 2, () => setPhase("output-2"));
-    after(typedAt + OUTPUT_GAP_MS * 2 + 200, () => setPhase("running"));
+    after(typedAt + OUTPUT_GAP_MS * 2 + 200, () => {
+      setPhase("running");
+      setDraw((n) => n + 1);
+    });
     after(typedAt + OUTPUT_GAP_MS * 2 + 200 + DAG_SETTLE_MS, () =>
       setPhase("done"),
     );
   }
 
-  const settled = phase === "running" || phase === "done";
-  const showLine1 = phase === "output-1" || phase === "output-2" || settled;
-  const showLine2 = phase === "output-2" || settled;
+  /**
+   * The graph animates on arrival and on replay, and is held at its end state
+   * while the command types -- so it is never blank, and never redraws behind
+   * a command that has not finished running.
+   */
+  const drawing = phase === "initial" || phase === "running" || phase === "done";
+  const ran = phase !== "initial";
+  const showLine1 =
+    phase === "output-1" || phase === "output-2" || phase === "running" || phase === "done";
+  const showLine2 = phase === "output-2" || phase === "running" || phase === "done";
 
   return (
     <div className="grid items-center gap-14 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
       <div className="min-w-0">
-        <Kicker>llm pipeline analysis</Kicker>
+        {/*
+          The eyebrow replaces the hero kicker rather than stacking above it:
+          two lowercase mono labels in a column read as one indecisive label.
+          It says what the kicker said -- this is LLM pipeline analysis -- and
+          adds what an early-stage product most needs to signal, which is that
+          something is happening and there is a way in.
+        */}
+        <a
+          href="#early-access"
+          className="eyebrow inline-flex items-center gap-2.5 rounded-chip border border-line-strong bg-surface py-1.5 pr-4 pl-3 font-mono text-[0.75rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-text"
+        >
+          <span
+            aria-hidden
+            className="size-1.5 shrink-0 rounded-chip bg-amber shadow-[0_0_0_3px_var(--color-amber-dim)]"
+          />
+          private beta · now accepting testers
+        </a>
 
-        <h1 className="mt-6">
-          <span className="font-bold text-muted">
-            Your traces show what the pipeline cost.
-          </span>{" "}
-          ChainOpt shows which calls to cut.
-        </h1>
+        <KineticHeadline
+          className="mt-6"
+          segments={[
+            { text: "Your traces show what the pipeline cost.", dim: true },
+            { text: "ChainOpt shows which calls to cut." },
+          ]}
+        />
 
-        <p className="mt-6 max-w-[56ch] text-[1.05rem] text-muted">
+        <p className="hero-body mt-6 max-w-[56ch] text-[1.05rem] text-muted">
           A Python SDK and CLI that reads your LLM agent pipeline, then points
           at the calls wasting money: duplicated work, models larger than the
           task needs, and steps that could have run in parallel. Every finding
           carries the prompts and responses it came from.
         </p>
 
-        <div className="mt-9 flex flex-wrap items-center gap-3">
+        <div className="hero-body mt-9 flex flex-wrap items-center gap-3">
           <a href="#early-access" className={btn()}>
             Request access
           </a>
@@ -110,13 +156,13 @@ export function HeroDemo() {
           </a>
         </div>
 
-        <div className="mt-7 max-w-[26rem] rounded-term border border-line bg-surface px-4 py-3.5 font-mono text-[0.85rem] leading-[1.7]">
+        <div className="hero-body mt-7 max-w-[26rem] rounded-term border border-line bg-surface px-4 py-3.5 font-mono text-[0.85rem] leading-[1.7]">
           <p className="flex gap-2.5">
             <span aria-hidden className="shrink-0 select-none text-teal">
               $
             </span>
             <code className="min-w-0 text-text">
-              {phase === "idle" ? IDLE_COMMAND : typed}
+              {ran ? typed : IDLE_COMMAND}
               {phase === "typing" ? <span aria-hidden className="caret" /> : null}
             </code>
           </p>
@@ -165,17 +211,22 @@ export function HeroDemo() {
             {/* On a narrow screen the graph would compress its labels past
                 legibility, so it scrolls inside its own frame instead. */}
             <div className="overflow-x-auto px-4 py-5">
-              <PipelineDiagram key={run} idle={!settled} />
+              <PipelineDiagram key={mount} idle={!drawing} />
             </div>
           </div>
 
           <p
-            data-numeric
             className={`absolute right-4 -bottom-4 rounded-chip border border-teal-line bg-teal-dim px-3.5 py-2 font-mono text-[0.8rem] text-teal backdrop-blur-[6px] ${
-              settled ? "savings-rise" : ""
+              drawing ? "savings-rise" : ""
             }`}
           >
-            +$38.20/mo recoverable
+            <CountUp
+              amount={38.2}
+              prefix="+$"
+              suffix="/mo recoverable"
+              delayMs={CHIP_MS}
+              restartKey={draw}
+            />
           </p>
         </div>
 

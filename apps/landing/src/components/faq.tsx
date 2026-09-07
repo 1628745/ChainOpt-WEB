@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { SectionGlow } from "@/components/section-glow";
 import { Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
@@ -132,8 +133,9 @@ export function Faq() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="questions" className="section border-b border-line">
+    <section id="questions" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
+        <SectionGlow />
         <Kicker>questions</Kicker>
         <h2 className="mt-5">What developers ask first</h2>
 

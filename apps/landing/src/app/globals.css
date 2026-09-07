@@ -190,11 +190,58 @@
     background: linear-gradient(160deg, var(--color-surface) 0%, #0f1626 100%);
   }
 
+  /* ---------------------------------------------------------------------
+   * Load sequence
+   *
+   * The page assembles top to bottom and is settled at 1.8s:
+   *
+   *   0.06s  the eyebrow rises
+   *   0.16s  headline words begin, 60ms apart, the last landing at 1.23s
+   *   0.70s  the rest of the left column arrives as one block
+   *   0s     the graph draws alongside, its savings chip landing at 1.8s
+   *
+   * Run strictly in series this reaches nearly three seconds, and a page that
+   * animates in single file feels slower than one where things overlap. The
+   * left column leads; the graph resolves underneath it.
+   * ------------------------------------------------------------------ */
+
+  .eyebrow {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: rise-in 0.3s var(--ease-out) 0.06s forwards;
+  }
+
   /*
-   * The one orchestrated moment on the page: the hero DAG draws its own
-   * edges on load, the flagged redundancy resolves, and the savings chip
-   * rises in behind it. Nothing else on the site animates on entry.
+   * The headline assembles word by word. Small enough to read as the line
+   * settling into place rather than as an effect -- 8px and 350ms, not a
+   * letter explosion.
    */
+  .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: rise-in 0.35s var(--ease-out) var(--word-delay, 0s) forwards;
+  }
+
+  .dim {
+    color: var(--color-muted);
+    font-weight: 700;
+  }
+
+  /*
+   * Sub copy, buttons and terminal arrive together, rather than each part
+   * negotiating its own entrance.
+   */
+  .hero-body {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: rise-in 0.35s var(--ease-out) 0.7s forwards;
+  }
+
+  /* ---------------------------------------------------------------------
+   * The pipeline graph
+   * ------------------------------------------------------------------ */
+
   .dag-edge {
     stroke-dasharray: var(--edge-len, 200);
     stroke-dashoffset: var(--edge-len, 200);
@@ -213,34 +260,139 @@
   }
 
   /*
-   * The headline assembles word by word. Small enough to read as the line
-   * settling into place rather than as an effect -- 8px and 350ms, not a
-   * letter explosion. The dim half keeps its own treatment, since the words
-   * animate inside it rather than around it.
+   * Nodes answer for themselves on hover or focus. A node is not a control --
+   * it opens nothing and goes nowhere -- so it keeps the default cursor and
+   * only firms up its border.
    */
-  .word {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(8px);
-    animation: word-in 0.35s var(--ease-out) var(--word-delay, 0s) forwards;
+  .dag-node {
+    cursor: default;
+    outline: none;
   }
 
-  .dim {
-    color: var(--color-muted);
-    font-weight: 700;
+  .dag-node-box {
+    stroke: transparent;
+    transition: stroke 0.15s var(--ease-out);
+  }
+
+  .dag-node:hover .dag-node-box,
+  .dag-node:focus-visible .dag-node-box {
+    stroke: var(--color-amber);
+  }
+
+  .dag-tip {
+    animation: dag-tip-in 0.15s var(--ease-out) forwards;
+  }
+
+  /* Typed-command caret for the hero demo. */
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    translate: 0 0.16em;
+    background: var(--color-teal);
+    animation: caret-blink 1s steps(1, end) infinite;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Section illumination
+   *
+   * Deliberately under the threshold where amber reads as a colour: 7% at the
+   * centre, blurred across 40px, so the section comes forward without the body
+   * copy taking a tint. z-index -1 inside an isolated stacking context, so it
+   * cannot escape behind the section ground or paint over the text above it.
+   * ------------------------------------------------------------------ */
+
+  .section-glow {
+    position: absolute;
+    top: -56px;
+    left: -96px;
+    z-index: -1;
+    width: 320px;
+    height: 320px;
+    border-radius: var(--radius-chip);
+    background: radial-gradient(
+      closest-side,
+      rgba(255, 178, 36, 0.07),
+      transparent
+    );
+    filter: blur(40px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out);
+  }
+
+  .section-glow.is-lit {
+    opacity: 1;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Compatibility belt
+   * ------------------------------------------------------------------ */
+
+  /*
+   * Names dissolve at both ends rather than being cut off mid-word, which
+   * would read as a clipping bug rather than as a belt -- and keeps a
+   * half-word from butting up against the static label.
+   */
+  .belt-track {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 40px,
+      black calc(100% - 40px),
+      transparent
+    );
   }
 
   /*
-   * The rest of the left column arrives as one block behind the headline,
-   * rather than each part negotiating its own entrance.
+   * One cycle carries the run left by exactly one copy of the list, so the
+   * motion is seamless. 40s is slow enough to read a name in passing and slow
+   * enough not to pull the eye off the headline.
    */
-  .hero-body {
-    opacity: 0;
-    transform: translateY(8px);
-    animation: word-in 0.35s var(--ease-out) 0.45s forwards;
+  .belt-run {
+    animation: belt-scroll 40s linear infinite;
   }
 
-  @keyframes word-in {
+  .belt:hover .belt-run {
+    animation-play-state: paused;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Cost comparison bars
+   * ------------------------------------------------------------------ */
+
+  /*
+   * Width rather than transform, because the bar has to actually take up the
+   * space it claims -- a scaled bar would distort its own border and its
+   * label. The border colour is owned here rather than by a Tailwind utility,
+   * which would win the cascade and paint a visible 2px sliver before the bar
+   * had grown at all.
+   */
+  .cost-fill {
+    width: 0;
+    border-color: transparent;
+    transition:
+      width 0.7s var(--ease-out) var(--delay, 0s),
+      border-color 0.7s var(--ease-out) var(--delay, 0s);
+  }
+
+  .cost-fill[data-lit] {
+    width: var(--to);
+    border-color: var(--color-teal-line);
+  }
+
+  .cost-waste {
+    width: 0;
+    transition: width 0.7s var(--ease-out) var(--delay, 0s);
+  }
+
+  .cost-waste[data-lit] {
+    width: var(--to);
+  }
+
+  /* ------------------------------------------------------------------ */
+
+  @keyframes rise-in {
     to {
       opacity: 1;
       transform: translateY(0);
@@ -266,6 +418,33 @@
     }
   }
 
+  @keyframes dag-tip-in {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes belt-scroll {
+    to {
+      transform: translateX(var(--belt-shift, -12.5%));
+    }
+  }
+
+  /*
+   * Everything animated on this page has an end state worth showing. Under
+   * reduced motion it is simply shown, rather than shown faster.
+   */
   @media (prefers-reduced-motion: reduce) {
     .dag-edge {
       stroke-dashoffset: 0;
@@ -274,11 +453,31 @@
 
     .dag-reveal,
     .savings-rise,
+    .dag-tip,
+    .eyebrow,
     .word,
     .hero-body {
       opacity: 1;
       transform: none;
       animation: none;
+    }
+
+    .caret,
+    .section-glow,
+    .cost-fill,
+    .cost-waste {
+      transition: none;
+      animation: none;
+    }
+
+    /* A belt that cannot move is just a list, so show one copy of it. */
+    .belt-run {
+      animation: none;
+      transform: none;
+    }
+
+    .belt-run > *:not(:first-child) {
+      display: none;
     }
   }
 }

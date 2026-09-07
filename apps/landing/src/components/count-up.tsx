@@ -32,6 +32,8 @@ export function CountUp({
   prefix = "$",
   suffix,
   className,
+  delayMs = 0,
+  restartKey,
 }: {
   /** The figure to land on, e.g. 38.2 renders as $38.20. */
   amount: number;
@@ -40,6 +42,18 @@ export function CountUp({
   /** Rendered after the number and never animated, e.g. "/mo recoverable". */
   suffix?: string;
   className?: string;
+  /**
+   * Wait this long after the figure comes into view before counting. For a
+   * figure that arrives on an animation of its own -- the hero savings chip
+   * rises at 1.4s -- counting on sight would spend the whole animation behind
+   * an invisible element.
+   */
+  delayMs?: number;
+  /**
+   * Change this to count again. Used by the hero demo so a replay re-runs the
+   * figure with the graph; left alone, the count fires once and stays put.
+   */
+  restartKey?: number;
 }) {
   const reduced = useReducedMotion();
   const host = useRef<HTMLSpanElement>(null);
@@ -53,24 +67,29 @@ export function CountUp({
     if (!hostNode || !outNode || reduced) return;
 
     let frame = 0;
-    outNode.textContent = (0).toFixed(2);
+    let timer = 0;
+
+    const count = () => {
+      outNode.textContent = (0).toFixed(2);
+
+      // Time from the first frame's own timestamp, not from now: rAF hands
+      // back the frame's start time, which can predate this callback and
+      // would otherwise make the first tick a negative amount.
+      let startedAt = 0;
+      const step = (now: number) => {
+        startedAt ||= now;
+        const t = Math.min((now - startedAt) / DURATION_MS, 1);
+        outNode.textContent = (amount * ease(t)).toFixed(2);
+        if (t < 1) frame = requestAnimationFrame(step);
+      };
+      frame = requestAnimationFrame(step);
+    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
-
-        // Time from the first frame's own timestamp, not from now: rAF hands
-        // back the frame's start time, which can predate this callback and
-        // would otherwise make the first tick a negative amount.
-        let startedAt = 0;
-        const step = (now: number) => {
-          startedAt ||= now;
-          const t = Math.min((now - startedAt) / DURATION_MS, 1);
-          outNode.textContent = (amount * ease(t)).toFixed(2);
-          if (t < 1) frame = requestAnimationFrame(step);
-        };
-        frame = requestAnimationFrame(step);
+        timer = window.setTimeout(count, delayMs);
       },
       { threshold: THRESHOLD },
     );
@@ -79,10 +98,13 @@ export function CountUp({
 
     return () => {
       observer.disconnect();
+      window.clearTimeout(timer);
       cancelAnimationFrame(frame);
       outNode.textContent = amount.toFixed(2);
     };
-  }, [amount, reduced]);
+    // restartKey is a deliberate trigger: changing it tears this down and
+    // re-arms the whole thing, which is exactly what a replay wants.
+  }, [amount, reduced, delayMs, restartKey]);
 
   return (
     <span ref={host} data-countup className={className}>

@@ -15,7 +15,7 @@ import type { CSSProperties } from "react";
  */
 
 const WORD_MS = 60;
-const LEAD_MS = 80;
+const LEAD_MS = 160;
 
 export type Segment = {
   text: string;

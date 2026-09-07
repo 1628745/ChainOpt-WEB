@@ -1,5 +1,6 @@
-import { SectionGlow } from "@/components/section-glow";
+import { CostBar } from "@/components/cost-bar";
 import { Evidence } from "@/components/evidence";
+import { SectionGlow } from "@/components/section-glow";
 import { QUOTES, Testimonial } from "@/components/testimonial";
 import {
   Badge,
@@ -106,6 +107,9 @@ export function FindingPreview() {
         <p className="mt-5 font-mono text-[0.74rem] text-muted">
           illustrative example · not measured results
         </p>
+
+        {/* The two panels above, stated as one picture. */}
+        <CostBar className="mt-10" />
 
         {/* Renders only once a real quote replaces the placeholder. */}
         <Testimonial quote={QUOTES.finding} className="mt-8 max-w-[720px]" />

@@ -5,7 +5,6 @@ import { SectionGlow } from "@/components/section-glow";
 import { QUOTES, Testimonial } from "@/components/testimonial";
 import {
   Badge,
-  Kicker,
   MetricChip,
   Panel,
   PanelBody,
@@ -30,8 +29,7 @@ export function FindingPreview() {
     <section id="finding" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
         <SectionGlow />
-        <Kicker>a finding</Kicker>
-        <h2 className="mt-5">What a finding actually looks like</h2>
+        <h2>What a finding actually looks like</h2>
         <p className="mt-5 max-w-[62ch] text-[0.98rem] text-muted">
           A finding is a claim with its working shown: what kind of waste it is,
           how confident the match is, how many real runs it appeared in, and the

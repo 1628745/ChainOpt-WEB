@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Footer } from "@/components/footer";
 import { SiteHeader } from "@/components/site-header";
 import { archivo, ibmPlexMono } from "@/lib/fonts";
 import { siteUrl } from "@/lib/site";
@@ -70,7 +71,10 @@ export default function RootLayout({
           Skip to content
         </a>
         <SiteHeader />
-        {children}
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

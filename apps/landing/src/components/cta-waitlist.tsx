@@ -4,7 +4,6 @@ import { SectionGlow } from "@/components/section-glow";
 import { type FormEvent, useId, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Kicker } from "@/components/ui/primitives";
 import { btn } from "@/components/ui/button";
 import { bookingUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -56,8 +55,7 @@ export function CtaWaitlist() {
       <div className="wrap">
         <SectionGlow />
         <div className="max-w-[720px] rounded-feature border border-line panel-surface p-8 sm:p-10">
-          <Kicker>early access</Kicker>
-          <h2 className="mt-5">ChainOpt is in private beta</h2>
+          <h2>ChainOpt is in private beta</h2>
 
           <p className="mt-5 max-w-[58ch] text-[0.98rem] text-muted">
             I&apos;m looking for a small group of testers to run the analysis

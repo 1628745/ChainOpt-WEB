@@ -65,6 +65,10 @@ Layout is left-aligned throughout, capped at 1120px by `.wrap`, with two
 breakpoints: 940px (`md:`, grids collapse) and 640px (`sm:`, spacing shrinks and
 non-CTA nav links hide).
 
+The site is four routes -- `/`, `/how-it-works`, `/pricing`, `/early-access` --
+each assembled in `src/app/<route>/page.tsx` from the section components in
+`src/components`. Sections know nothing about which page they sit on.
+
 Motion is one orchestrated moment: the hero DAG draws its edges on load, the
 redundancy resolves, and the savings chip rises in. Everything else is a 0.15s
 hover transition. `prefers-reduced-motion` skips all of it.

@@ -77,7 +77,6 @@ the product would print as data.
 | H3 (card/step titles) | Archivo | 1.05–1.2rem | 600 | −0.01em | default |
 | Body | Archivo | 16px | 400 | 0 | 1.6 |
 | Subtext / section intro | Archivo | 0.95–1.08rem, muted | 400 | 0 | 1.6 |
-| Kicker labels | IBM Plex Mono | 0.8rem | 400 | +0.02em | — |
 | Terminal / code | IBM Plex Mono | 0.83–0.9rem | 400 | 0 | — |
 | Metric chips, footnotes, frame labels | IBM Plex Mono | 0.7–0.78rem | 400–600 | 0 | — |
 
@@ -86,9 +85,13 @@ the product would print as data.
 - Headlines may split into strong/soft halves with a muted 700-weight span.
 - H2 caps at 22ch. Body and intro copy at 50–64ch. Text never runs the full
   container width.
-- Section labels ("kickers") are **lowercase monospace**, never ALL-CAPS, each
-  prefixed with an 8px amber dot glowing on
-  `box-shadow: 0 0 0 4px var(--color-amber-dim)`.
+- **No labels above headings.** Sections are introduced by their H2 and
+  nothing else. The lowercase monospace kicker this system used to carry has
+  been removed: monospace is for what the product would print -- commands,
+  metrics, metadata, evidence -- and reading it as a section title made
+  marketing copy look like terminal output. The single exception is the hero
+  announcement pill, which is a badge with somewhere to go rather than a
+  section title, and it is set in Archivo like the prose around it.
 - Numbers and data render in mono. Pricing figures are the exception: Archivo
   800, −0.03em.
 - Never append arrows to button labels. Arrows appear only inside terminal
@@ -111,7 +114,23 @@ the product would print as data.
   buttons 10px, nav CTA 9px, inner blocks and metrics 8px, chips and badges
   fully rounded (999px).
 - **Nav:** sticky, 66px, `--color-nav` behind `backdrop-filter: blur(12px)`,
-  bottom border `--color-line`.
+  bottom border `--color-line`. The current page is marked with `aria-current`
+  and full-brightness text; the others stay muted.
+
+**Pages.** The site is four routes, not one scroll:
+
+| Route | Holds |
+| --- | --- |
+| `/` | Hero, the works-with belt, where ChainOpt fits |
+| `/how-it-works` | The three commands, then what a finding looks like |
+| `/pricing` | Prices, then the questions people ask about them |
+| `/early-access` | The waitlist form and the booking link |
+
+`main` and the footer live in the layout, so every route gets the same frame.
+Every page except `/early-access` ends in a `NextStep` band naming the obvious
+next move -- a page that ends in a footer is a dead end. Internal navigation
+goes through `next/link`, so routes are prefetched and transitions are
+client-side.
 
 ## 5. Component recipes
 
@@ -211,7 +230,7 @@ or replace the glyph or wordmark. It lives in `src/components/wordmark.tsx` at
 - [ ] Amber = findings/CTA, teal = savings; no semantic drift, no decoration
 - [ ] All data and labels in IBM Plex Mono, all prose in Archivo
 - [ ] Left-aligned, text constrained to a readable measure
-- [ ] Kickers lowercase mono with the amber dot; no ALL-CAPS, no arrows in buttons
+- [ ] No label above the heading; no ALL-CAPS, no arrows in buttons
 - [ ] Transitions on `--ease-out` / `--ease-inout`, within the duration budget
 - [ ] `:focus-visible` amber ring on every interactive element
 - [ ] `prefers-reduced-motion` honoured for anything animated

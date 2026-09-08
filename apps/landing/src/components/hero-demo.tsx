@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { CountUp } from "@/components/count-up";
@@ -115,22 +116,25 @@ export function HeroDemo() {
     <div className="grid items-center gap-14 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
       <div className="min-w-0">
         {/*
-          The eyebrow replaces the hero kicker rather than stacking above it:
-          two lowercase mono labels in a column read as one indecisive label.
-          It says what the kicker said -- this is LLM pipeline analysis -- and
-          adds what an early-stage product most needs to signal, which is that
-          something is happening and there is a way in.
+          The one announcement on the site: a badge with somewhere to go, not
+          a section title. It says what an early-stage product most needs to
+          signal -- that something is happening and there is a way in.
+
+          Set in Archivo like the rest of the prose. Monospace is for what the
+          product would print -- commands, metrics, metadata -- and no longer
+          appears above a heading anywhere on the site. The middot goes with
+          it, since that separator belongs to mono data strings.
         */}
-        <a
-          href="#early-access"
-          className="eyebrow inline-flex items-center gap-2.5 rounded-chip border border-line-strong bg-surface py-1.5 pr-4 pl-3 font-mono text-[0.75rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-text"
+        <Link
+          href="/early-access"
+          className="eyebrow inline-flex items-center gap-2.5 rounded-chip border border-line-strong bg-surface py-1.5 pr-4 pl-3 text-[0.8rem] font-medium text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-text"
         >
           <span
             aria-hidden
             className="size-1.5 shrink-0 rounded-chip bg-amber shadow-[0_0_0_3px_var(--color-amber-dim)]"
           />
-          private beta · now accepting testers
-        </a>
+          Private beta — now accepting testers
+        </Link>
 
         <KineticHeadline
           className="mt-6"
@@ -148,12 +152,12 @@ export function HeroDemo() {
         </p>
 
         <div className="hero-body mt-9 flex flex-wrap items-center gap-3">
-          <a href="#early-access" className={btn()}>
+          <Link href="/early-access" className={btn()}>
             Request access
-          </a>
-          <a href="#how-it-works" className={btn({ variant: "ghost" })}>
+          </Link>
+          <Link href="/how-it-works" className={btn({ variant: "ghost" })}>
             See how it works
-          </a>
+          </Link>
         </div>
 
         <div className="hero-body mt-7 max-w-[26rem] rounded-term border border-line bg-surface px-4 py-3.5 font-mono text-[0.85rem] leading-[1.7]">

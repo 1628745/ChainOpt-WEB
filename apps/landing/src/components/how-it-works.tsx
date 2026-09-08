@@ -1,6 +1,5 @@
 import { SectionGlow } from "@/components/section-glow";
 import { TerminalBlock } from "@/components/terminal-block";
-import { Kicker } from "@/components/ui/primitives";
 
 type Step = {
   title: string;
@@ -60,8 +59,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
         <SectionGlow />
-        <Kicker>how it works</Kicker>
-        <h2 className="mt-5">Three commands from install to first finding</h2>
+        <h2>Three commands from install to first finding</h2>
 
         <ol className="mt-14 flex flex-col gap-12">
           {steps.map((step, i) => (

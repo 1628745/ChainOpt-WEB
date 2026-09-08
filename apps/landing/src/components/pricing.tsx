@@ -1,7 +1,9 @@
+import Link from "next/link";
+
 import { SectionGlow } from "@/components/section-glow";
 import { QUOTES, Testimonial } from "@/components/testimonial";
 import { btn } from "@/components/ui/button";
-import { Badge, Kicker } from "@/components/ui/primitives";
+import { Badge } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
 type Tier = {
@@ -82,9 +84,9 @@ function TierCard({ name, price, note, features, variant, featured }: Tier) {
         ))}
       </ul>
 
-      <a href="#early-access" className={cn(btn({ variant }), "mt-8 w-full")}>
+      <Link href="/early-access" className={cn(btn({ variant }), "mt-8 w-full")}>
         Request access
-      </a>
+      </Link>
     </div>
   );
 }
@@ -94,8 +96,7 @@ export function Pricing() {
     <section id="pricing" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
         <SectionGlow />
-        <Kicker>pricing</Kicker>
-        <h2 className="mt-5">Usage-based, with no seats to count</h2>
+        <h2>Usage-based, with no seats to count</h2>
         <p className="mt-5 max-w-[58ch] text-[0.98rem] text-muted">
           These are the planned rates for general release. While ChainOpt is in
           private beta there is nothing to pay and no card to enter.

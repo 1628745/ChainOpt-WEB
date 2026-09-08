@@ -8,30 +8,6 @@ import { cn } from "@/lib/utils";
  * should read like a screenshot of the thing it is selling.
  */
 
-/** Section label: lowercase mono, prefixed with a glowing amber dot. */
-export function Kicker({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <p
-      className={cn(
-        "flex items-center gap-3 font-mono text-[0.8rem] tracking-[0.02em] text-muted",
-        className,
-      )}
-    >
-      <span
-        aria-hidden
-        className="size-2 shrink-0 rounded-chip bg-amber shadow-[0_0_0_4px_var(--color-amber-dim)]"
-      />
-      {children}
-    </p>
-  );
-}
-
 /** Amber = a finding. Teal = a saving or a positive match. Nothing else. */
 export function Badge({
   tone = "amber",

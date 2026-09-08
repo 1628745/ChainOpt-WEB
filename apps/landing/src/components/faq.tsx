@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import { SectionGlow } from "@/components/section-glow";
-import { Kicker } from "@/components/ui/primitives";
 import { cn } from "@/lib/utils";
 
 /**
@@ -136,8 +135,7 @@ export function Faq() {
     <section id="questions" className="section relative isolate overflow-x-clip border-b border-line">
       <div className="wrap">
         <SectionGlow />
-        <Kicker>questions</Kicker>
-        <h2 className="mt-5">What developers ask first</h2>
+        <h2>What developers ask first</h2>
 
         <div className="mt-11 max-w-[840px] overflow-hidden rounded-panel border border-line bg-surface">
           {ITEMS.map((item, i) => (

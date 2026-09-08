@@ -234,8 +234,8 @@ export function HeroDemo() {
           </p>
         </div>
 
-        <p className="mt-14 font-mono text-[0.72rem] text-muted">
-          illustrative example · not measured results
+        <p className="mt-14 text-[0.8rem] text-muted">
+          Illustrative example — not measured results.
         </p>
       </div>
     </div>

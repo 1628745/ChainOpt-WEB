@@ -112,8 +112,8 @@ export function CtaWaitlist() {
             </div>
           </form>
 
-          <p className="mt-4 font-mono text-[0.74rem] text-muted">
-            no newsletter · no sharing your address · replies are personal
+          <p className="mt-4 text-[0.85rem] text-muted">
+            No newsletter, no sharing your address, and replies are personal.
           </p>
 
           {/*

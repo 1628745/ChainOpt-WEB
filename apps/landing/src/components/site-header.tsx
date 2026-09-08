@@ -8,15 +8,16 @@ import { Wordmark } from "@/components/wordmark";
 import { cn } from "@/lib/utils";
 
 /**
- * The FAQ lives at the foot of the pricing page rather than on a route of its
- * own -- the questions people ask are mostly about cost and about what leaves
- * their machine, so they belong next to the prices. The nav still names it,
- * because that is what people scan for.
+ * One entry per destination. The FAQ sits at the foot of the pricing page --
+ * the questions people ask are mostly about cost and about what leaves their
+ * machine -- and it briefly had a nav entry of its own pointing there. Two
+ * tabs that land on the same page promise two places and deliver one, so the
+ * duplicate is gone. The footer still deep-links to it, where a list of links
+ * reads as a list rather than as a set of destinations.
  */
 const links = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/pricing#questions", label: "FAQ" },
 ];
 
 export function SiteHeader() {
@@ -31,9 +32,6 @@ export function SiteHeader() {
 
         <nav aria-label="Main" className="hidden items-center gap-7 sm:flex">
           {links.map((link) => {
-            // `/pricing#questions` and `/pricing` are the same page; only the
-            // bare route claims the current-page marker, so the two never both
-            // light up.
             const current = pathname === link.href;
 
             return (

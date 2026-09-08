@@ -5,6 +5,7 @@ import { Wordmark } from "@/components/wordmark";
 const links = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/pricing#questions", label: "FAQ" },
   { href: "/early-access", label: "Early access" },
 ];
 
@@ -32,9 +33,9 @@ export function Footer() {
           </nav>
         </div>
 
-        <p className="max-w-[52ch] font-mono text-[0.72rem] leading-relaxed text-muted">
-          built by an independent developer · not affiliated with langchain,
-          openai, anthropic, or any other provider named on this page
+        <p className="max-w-[56ch] text-[0.85rem] text-muted">
+          Built by an independent developer. Not affiliated with LangChain,
+          OpenAI, Anthropic, or any other provider named on this page.
         </p>
       </div>
     </footer>

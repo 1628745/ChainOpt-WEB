@@ -214,15 +214,26 @@ or replace the glyph or wordmark. It lives in `src/components/wordmark.tsx` at
 
 ## 9. Content & voice
 
-- Kickers and metadata are lowercase. Body copy is sentence case. No ALL-CAPS.
+- **Monospace is what the product would print** — commands, metrics, labels,
+  metadata, evidence. Prose the site speaks in its own voice is Archivo, even
+  when it is small and grey: captions under an illustration, the reassurance
+  under the form, the footer disclaimer. Setting editorial copy in mono makes
+  marketing read as terminal output, which is the one thing this system must
+  not do.
+- Metadata is lowercase. Body copy, including small grey copy, is sentence
+  case. No ALL-CAPS.
 - Data separators inside mono strings use `·`: `step 1 · haiku`,
-  `langfuse · helicone`. Mono data strings only, never prose.
+  `langfuse · helicone`. Mono data strings only, never prose — prose takes an
+  em dash or a full stop.
 - Findings are evidence-first: every claim is paired with similarity scores, run
   counts, or dollar amounts in metric chips.
 - Dollar amounts follow `$38.20 / month` or `+$38.20/mo recoverable`.
 - Never invent model names, model IDs, or pricing. Never present illustrative
-  figures as measured results — label them
-  `illustrative example · not measured results`.
+  figures as measured results — label them "Illustrative example — not measured
+  results."
+- One nav entry per destination. A tab that deep-links into a page another tab
+  already owns promises two places and delivers one; put it in the footer,
+  where a list of links reads as a list rather than as a set of destinations.
 
 ## 10. Checklist for new UI work
 

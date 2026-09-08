@@ -111,8 +111,8 @@ export function FindingPreview() {
           </Panel>
         </div>
 
-        <p className="mt-5 font-mono text-[0.74rem] text-muted">
-          illustrative example · not measured results
+        <p className="mt-5 text-[0.8rem] text-muted">
+          Illustrative example — not measured results.
         </p>
 
         {/* The two panels above, stated as one picture. */}

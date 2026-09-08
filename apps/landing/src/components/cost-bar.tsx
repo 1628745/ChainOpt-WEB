@@ -127,8 +127,8 @@ export function CostBar({ className }: { className?: string }) {
         <Amount value={OPTIMISED} lit={lit} />
       </div>
 
-      <p className="mt-3 font-mono text-[0.72rem] text-muted">
-        illustrative — based on the two findings above
+      <p className="mt-3 text-[0.8rem] text-muted">
+        Illustrative — based on the two findings above.
       </p>
     </div>
   );

@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 
 import { Footer } from "@/components/footer";
@@ -75,6 +76,13 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        {/*
+          Cookieless and without a device identifier, so it needs no consent
+          banner -- which matters on a site whose central claim is that
+          ChainOpt does not phone home. It reports page views; the signup
+          event that actually matters is fired from the form itself.
+        */}
+        <Analytics />
       </body>
     </html>
   );

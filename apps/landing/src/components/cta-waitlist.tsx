@@ -1,6 +1,7 @@
 "use client";
 
 import { SectionGlow } from "@/components/section-glow";
+import { track } from "@vercel/analytics";
 import { type FormEvent, useId, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,11 @@ export function CtaWaitlist() {
       setStatus("success");
       setMessage("You're on the list. I'll be in touch soon.");
       setEmail("");
+
+      // The one question this site exists to answer. Page views say people
+      // arrived; only this says the site worked. No address is sent -- the
+      // event carries which page the person came from and nothing else.
+      track("waitlist_signup", { path: window.location.pathname });
     } catch {
       setStatus("error");
       setMessage("That didn't go through. Check your connection and try again.");

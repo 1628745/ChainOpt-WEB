@@ -60,10 +60,20 @@ function Amount({ value, lit }: { value: number; lit: boolean }) {
   }, [lit, reduced, value]);
 
   return (
-    <span data-numeric className="text-[0.85rem] text-text">
+    <span className="text-[1.15rem] font-bold tracking-[-0.02em] text-text">
       $
-      <span ref={out} style={{ display: "inline-block", width: `${final.length}ch`, textAlign: "right" }}>
-        {final}
+      {/* A hidden copy at the final value holds the width, so the row does not
+          shuffle as the integer part gains a digit. */}
+      <span className="inline-grid">
+        <span aria-hidden className="invisible col-start-1 row-start-1">
+          {final}
+        </span>
+        <span
+          ref={out}
+          className="col-start-1 row-start-1 text-left [font-variant-numeric:tabular-nums]"
+        >
+          {final}
+        </span>
       </span>
     </span>
   );
@@ -91,10 +101,10 @@ export function CostBar({ className }: { className?: string }) {
   }, []);
 
   return (
-    <div ref={host} className={cn("max-w-[560px]", className)}>
-      <div className="grid grid-cols-[76px_1fr_auto] items-center gap-x-4 gap-y-3">
-        <span className="font-mono text-[0.74rem] text-muted">current</span>
-        <div className="h-6 overflow-hidden rounded-inner bg-surface-2">
+    <div ref={host} className={cn("max-w-[620px]", className)}>
+      <div className="grid grid-cols-[88px_1fr_auto] items-center gap-x-5 gap-y-4">
+        <span className="font-mono text-[0.8rem] text-muted">current</span>
+        <div className="h-9 overflow-hidden rounded-inner bg-surface-2">
           <div
             className="cost-fill flex h-full justify-end"
             style={{ "--to": "100%" } as CSSProperties}
@@ -116,8 +126,8 @@ export function CostBar({ className }: { className?: string }) {
         </div>
         <Amount value={CURRENT} lit={lit} />
 
-        <span className="font-mono text-[0.74rem] text-muted">optimized</span>
-        <div className="h-6 overflow-hidden rounded-inner bg-surface-2">
+        <span className="font-mono text-[0.8rem] text-muted">optimized</span>
+        <div className="h-9 overflow-hidden rounded-inner bg-surface-2">
           <div
             className="cost-fill h-full rounded-inner border bg-teal-dim"
             style={{ "--to": pct(OPTIMISED) } as CSSProperties}

@@ -55,9 +55,9 @@ Defined once in `globals.css` and exposed to Tailwind through `@theme inline`.
 **Semantic assignment:**
 
 - **Amber:** primary CTAs, nav CTA, finding/redundancy badges, flagged DAG nodes
-  and edges, the kicker dot, focus rings, hover accents on interactive borders,
-  the highlighted "ChainOpt" comparison row, the Pro pricing card border,
-  selection highlight.
+  and edges, the announcement pill's dot, focus rings, hover accents on
+  interactive borders, the highlighted "ChainOpt" comparison row, the Pro
+  pricing card border, selection highlight.
 - **Teal:** savings amounts, savings chips and lines, "oversizing"-class
   secondary badges, the terminal prompt `$`, positive/matched evidence labels.
 - The two never sit adjacent at full saturation. The `-dim` washes may.
@@ -74,7 +74,9 @@ the product would print as data.
 | --- | --- | --- | --- | --- | --- |
 | H1 | Archivo | `clamp(2.1rem, 4.6vw, 3.3rem)` | 800 | −0.03em | 1.08 |
 | H2 | Archivo | `clamp(1.7rem, 3.4vw, 2.4rem)` | 700 | −0.02em | 1.15 |
-| H3 (card/step titles) | Archivo | 1.05–1.2rem | 600 | −0.01em | default |
+| Finding title | Archivo | `clamp(1.35rem, 2.4vw, 1.7rem)` | 700 | −0.02em | 1.15 |
+| Savings figure | Archivo | `clamp(1.9rem, 3.4vw, 2.35rem)` | 800 | −0.03em | 1 |
+| H3 (step titles, FAQ questions) | Archivo | 1–1.2rem | 600 | −0.01em | default |
 | Body | Archivo | 16px | 400 | 0 | 1.6 |
 | Subtext / section intro | Archivo | 0.95–1.08rem, muted | 400 | 0 | 1.6 |
 | Terminal / code | IBM Plex Mono | 0.83–0.9rem | 400 | 0 | — |
@@ -92,8 +94,10 @@ the product would print as data.
   marketing copy look like terminal output. The single exception is the hero
   announcement pill, which is a badge with somewhere to go rather than a
   section title, and it is set in Archivo like the prose around it.
-- Numbers and data render in mono. Pricing figures are the exception: Archivo
-  800, −0.03em.
+- Numbers render in mono when they are data being reported -- metric values,
+  run counts, similarity scores, graph labels. They are set in Archivo 800 when
+  they are a headline in their own right: the prices, and the recoverable
+  amount on a finding card.
 - Never append arrows to button labels. Arrows appear only inside terminal
   output lines, as literal CLI output.
 
@@ -153,9 +157,19 @@ detection mechanism (mono 0.7rem muted, top border). Ground is `.panel-surface`.
 **Metric chips.** `--color-surface-2` fill, `--color-line` border, 8px radius,
 mono 0.74rem. Label muted, value in `<b>` in `--color-text`.
 
-**Savings indicators.** Inline line: mono ~0.95rem teal on `--color-teal-dim`,
-`--color-teal-line` border, 10px radius. Floating hero chip: same colours, pill
-radius, absolutely positioned, animating in.
+**Savings indicators.** The recoverable amount is the point of the product, so
+on a finding card it is the largest thing on the card: Archivo 800 in teal at
+`clamp(1.9rem, 3.4vw, 2.35rem)`, on `--color-teal-dim` behind a
+`--color-teal-line` border, with its unit beside it in mono 0.82rem at 75%
+opacity. That is the same weight and tracking as the prices on the pricing
+page -- what this costs and what it gives back are the same kind of object, and
+the one to read first is the one that is teal. The floating hero chip keeps the
+small treatment, being an annotation on a diagram rather than a headline.
+
+**Hierarchy inside a panel.** A card should step clearly rather than sit at one
+size: savings figure, then title, then body, then metric values, then head and
+foot metadata. If two of those measure the same, the card reads as a form
+rather than as a finding.
 
 **Highlighted comparison row.** `border-left: 3px solid var(--color-amber)`,
 background `linear-gradient(90deg, var(--color-amber-dim), transparent 65%)`,

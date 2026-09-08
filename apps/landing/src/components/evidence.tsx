@@ -34,12 +34,12 @@ export function Evidence({ items, note }: { items: Item[]; note: string }) {
   }
 
   return (
-    <div className="mt-5">
+    <div className="mt-6">
       <button
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-4 rounded-inner border border-line bg-surface-2 px-3.5 py-2.5 font-mono text-[0.76rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-amber"
+        className="flex w-full items-center justify-between gap-4 rounded-inner border border-line bg-surface-2 px-4 py-3 font-mono text-[0.82rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-amber"
       >
         {open ? "hide the evidence" : "show the evidence"}
         <svg
@@ -70,13 +70,13 @@ export function Evidence({ items, note }: { items: Item[]; note: string }) {
         <div ref={body} className="space-y-3 pt-4">
           {items.map((item) => (
             <div key={item.step}>
-              <p className="font-mono text-[0.72rem] text-teal">{item.step}</p>
-              <p className="mt-1.5 rounded-inner border border-line bg-ink px-3 py-2 font-mono text-[0.76rem] leading-relaxed text-muted">
+              <p className="font-mono text-[0.78rem] text-teal">{item.step}</p>
+              <p className="mt-2 rounded-inner border border-line bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] leading-relaxed text-muted">
                 {item.prompt}
               </p>
             </div>
           ))}
-          <p className="font-mono text-[0.72rem] text-muted">{note}</p>
+          <p className="font-mono text-[0.76rem] text-muted">{note}</p>
         </div>
       </div>
     </div>

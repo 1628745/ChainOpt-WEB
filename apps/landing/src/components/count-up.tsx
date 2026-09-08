@@ -3,12 +3,13 @@
 import { useEffect, useRef } from "react";
 
 import { useReducedMotion } from "@/lib/use-reduced-motion";
+import { cn } from "@/lib/utils";
 
 /**
  * A money figure that counts up the first time it is read.
  *
  * The whole argument of the page is that there is money sitting in a pipeline
- * that nobody has counted. A figure that ticks up makes that felt rather than
+ * that nobody has counted. A figure that ticks makes that felt rather than
  * merely stated -- so this is reserved for recoverable amounts, and is not a
  * general-purpose number animation.
  *
@@ -34,6 +35,7 @@ export function CountUp({
   className,
   delayMs = 0,
   restartKey,
+  mono = true,
 }: {
   /** The figure to land on, e.g. 38.2 renders as $38.20. */
   amount: number;
@@ -54,6 +56,12 @@ export function CountUp({
    * figure with the graph; left alone, the count fires once and stays put.
    */
   restartKey?: number;
+  /**
+   * Data figures are monospace. Headline amounts -- the recoverable total on a
+   * finding card -- are set in Archivo like the prices they answer, so the two
+   * biggest numbers on the site are the same kind of object.
+   */
+  mono?: boolean;
 }) {
   const reduced = useReducedMotion();
   const host = useRef<HTMLSpanElement>(null);
@@ -110,16 +118,26 @@ export function CountUp({
     <span ref={host} data-countup className={className}>
       {prefix}
       {/*
-        Tabular numerals hold every digit to the same width, and the fixed `ch`
-        box holds its width while the integer part gains digits -- so nothing
-        beside the figure moves while it counts.
+        Two copies of the figure stacked in one grid cell: a hidden one at the
+        final value holds the width, and the visible one animates inside it.
+        Reserving the box by measuring the real string rather than counting
+        `ch` means it is exact in a proportional face too, so nothing beside
+        the figure moves while it counts.
       */}
-      <span
-        ref={out}
-        data-numeric
-        style={{ display: "inline-block", width: `${final.length}ch` }}
-      >
-        {final}
+      <span className="inline-grid">
+        <span aria-hidden className="invisible col-start-1 row-start-1">
+          {final}
+        </span>
+        <span
+          ref={out}
+          data-numeric={mono ? "" : undefined}
+          className={cn(
+            "col-start-1 row-start-1 text-left",
+            !mono && "[font-variant-numeric:tabular-nums]",
+          )}
+        >
+          {final}
+        </span>
       </span>
       {suffix}
     </span>

@@ -1,13 +1,49 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 
-import { inter, jetbrainsMono } from "@/lib/fonts";
+import { Footer } from "@/components/footer";
+import { SiteHeader } from "@/components/site-header";
+import { archivo, ibmPlexMono } from "@/lib/fonts";
+import { siteUrl } from "@/lib/site";
 
 import "./globals.css";
 
+const description =
+  "ChainOpt analyses your LLM agent pipelines and points at the calls costing you money — redundant pairs, oversized models, and work that could run in parallel — with the prompt and response evidence behind every finding.";
+
 export const metadata: Metadata = {
-  title: "ChainOpt",
-  description:
-    "LLM pipeline analysis and optimization SDK for developers and AI teams.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "ChainOpt: find the LLM calls costing you money",
+    template: "%s | ChainOpt",
+  },
+  description,
+  applicationName: "ChainOpt",
+  keywords: [
+    "LLM pipeline optimization",
+    "LLM cost reduction",
+    "LangChain",
+    "LangGraph",
+    "AI agent observability",
+    "prompt redundancy detection",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "ChainOpt",
+    title: "ChainOpt: find the LLM calls costing you money",
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChainOpt: find the LLM calls costing you money",
+    description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -18,9 +54,36 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} dark h-full`}
+      className={`${archivo.variable} ${ibmPlexMono.variable}`}
+      /*
+       * Next 16 stopped overriding `scroll-behavior` during navigation. This
+       * attribute opts back in, so a future route change lands instantly while
+       * the in-page anchor links keep scrolling smoothly.
+       * See node_modules/next/dist/docs/01-app/02-guides/upgrading/version-16.md
+       */
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-dvh flex-col">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-btn focus:bg-amber focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[#1a1204]"
+        >
+          Skip to content
+        </a>
+        <SiteHeader />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
+        {/*
+          Cookieless and without a device identifier, so it needs no consent
+          banner -- which matters on a site whose central claim is that
+          ChainOpt does not phone home. It reports page views; the signup
+          event that actually matters is fired from the form itself.
+        */}
+        <Analytics />
+      </body>
     </html>
   );
 }

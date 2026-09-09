@@ -1,133 +1,483 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+/*
+ * ChainOpt design system.
+ *
+ * The page reads like the product's own UI: terminal blocks, dashboard
+ * panels, metric chips, monospace data labels. Colour is semantic and never
+ * decorative -- amber means "finding / waste / act on this", teal means
+ * "savings / recovered value". Neither is used for anything else, and the two
+ * never swap meanings.
+ *
+ * Dark only. There is no light palette to fall back to.
+ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
-  --font-heading: var(--font-inter);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
 
-  --color-chainopt-accent: var(--chainopt-accent);
-  --color-chainopt-muted: var(--chainopt-muted);
+  /* Base */
+  --color-ink: #0c1220;
+  --color-surface: #121b2c;
+  --color-surface-2: #182338;
+  --color-line: rgba(150, 172, 220, 0.15);
+  --color-line-strong: rgba(150, 172, 220, 0.28);
+
+  /* Text */
+  --color-text: #e9eef8;
+  --color-muted: #94a2bd;
+
+  /* Accents */
+  --color-amber: #ffb224;
+  --color-amber-dim: rgba(255, 178, 36, 0.14);
+  --color-amber-line: rgba(255, 178, 36, 0.35);
+  --color-amber-line-strong: rgba(255, 178, 36, 0.45);
+  --color-teal: #3adfc5;
+  --color-teal-dim: rgba(58, 223, 197, 0.12);
+  --color-teal-line: rgba(58, 223, 197, 0.3);
+
+  /* The nav sits over the page on a blurred wash of the ink itself. */
+  --color-nav: rgba(12, 18, 32, 0.82);
+
+  /* Easing. These override Tailwind's built-in `ease-out` / `ease-in-out`
+     utilities, so every transition on the site lands on the same two curves. */
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-inout);
+
+  /* Radii, per component class */
+  --radius-inner: 8px;
+  --radius-cta: 9px;
+  --radius-btn: 10px;
+  --radius-term: 12px;
+  --radius-panel: 14px;
+  --radius-feature: 18px;
+  --radius-chip: 999px;
+
+  /* The system has exactly two breakpoints: grids collapse at 940px,
+     spacing and nav shrink at 640px. */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 940px;
+  --breakpoint-lg: initial;
+  --breakpoint-xl: initial;
+  --breakpoint-2xl: initial;
 }
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-  --card: #111111;
-  --card-foreground: #ffffff;
-  --popover: #111111;
-  --popover-foreground: #ffffff;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --secondary: #18181b;
-  --secondary-foreground: #ffffff;
-  --muted: #18181b;
-  --muted-foreground: #a1a1aa;
-  --accent: #18181b;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #3b82f6;
-  --chart-1: #3b82f6;
-  --chart-2: #a1a1aa;
-  --chart-3: #52525b;
-  --chart-4: #3f3f46;
-  --chart-5: #27272a;
-  --radius: 0.5rem;
-  --sidebar: #111111;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #3b82f6;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #18181b;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #3b82f6;
+  color-scheme: dark;
 
-  --chainopt-accent: #3b82f6;
-  --chainopt-muted: #a1a1aa;
+  /*
+   * Two curves, and only two. --ease-out is for anything arriving (entrances,
+   * reveals, draws); --ease-inout is for anything moving between two states it
+   * already had. Entrances run 250-400ms and never exceed 700ms; hover-scale
+   * micro-interactions stay at 150ms.
+   */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
 
-  --section-y: 6rem;
-  --section-y-lg: 8rem;
-  --content-x: 1.5rem;
-  --content-max: 72rem;
-  --header-offset: 0px;
+  --header-h: 66px;
+  --wrap-max: 1120px;
+  --wrap-x: 28px;
+  --section-y: 96px;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --section-y: 64px;
+    --wrap-x: 20px;
+  }
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--color-line);
   }
 
   html {
-    @apply font-sans antialiased;
     scroll-behavior: smooth;
-    scroll-padding-top: var(--header-offset);
-  }
-
-  #early-access {
-    scroll-margin-top: var(--header-offset);
+    scroll-padding-top: calc(var(--header-h) + 24px);
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply min-h-full bg-background text-foreground text-base leading-relaxed;
+    background: var(--color-ink);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 4.6vw, 3.3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+  }
+
+  h2 {
+    font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    max-width: 22ch;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   code,
   kbd,
   samp,
   pre {
-    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+    font-family: var(--font-mono);
+  }
+
+  /* Figures that sit in a column align on the digit. */
+  [data-numeric] {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-amber);
+    color: #1a1204;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-@layer utilities {
-  .font-terminal {
-    font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+@layer components {
+  .wrap {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--wrap-max);
+    padding-inline: var(--wrap-x);
   }
 
-  .text-secondary {
-    color: var(--chainopt-muted);
+  .section {
+    padding-block: var(--section-y);
+  }
+
+  /*
+   * Panel ground. #0F1626 is one of the three permitted colour literals: the
+   * dark end of the panel gradient, deliberately not a token, so panels stay
+   * one recognisable surface wherever they appear.
+   */
+  .panel-surface {
+    background: linear-gradient(160deg, var(--color-surface) 0%, #0f1626 100%);
+  }
+
+  /* ---------------------------------------------------------------------
+   * Load sequence
+   *
+   * The page assembles top to bottom and is settled at 1.8s:
+   *
+   *   0.06s  the eyebrow rises
+   *   0.16s  headline words begin, 60ms apart, the last landing at 1.23s
+   *   0.70s  the rest of the left column arrives as one block
+   *   0s     the graph draws alongside, its savings chip landing at 1.8s
+   *
+   * Run strictly in series this reaches nearly three seconds, and a page that
+   * animates in single file feels slower than one where things overlap. The
+   * left column leads; the graph resolves underneath it.
+   * ------------------------------------------------------------------ */
+
+  .eyebrow {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: rise-in 0.3s var(--ease-out) 0.06s forwards;
+  }
+
+  /*
+   * The headline assembles word by word. Small enough to read as the line
+   * settling into place rather than as an effect -- 8px and 350ms, not a
+   * letter explosion.
+   */
+  .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: rise-in 0.35s var(--ease-out) var(--word-delay, 0s) forwards;
+  }
+
+  .dim {
+    color: var(--color-muted);
+    font-weight: 700;
+  }
+
+  /*
+   * Sub copy, buttons and terminal arrive together, rather than each part
+   * negotiating its own entrance.
+   */
+  .hero-body {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: rise-in 0.35s var(--ease-out) 0.7s forwards;
+  }
+
+  /* ---------------------------------------------------------------------
+   * The pipeline graph
+   * ------------------------------------------------------------------ */
+
+  .dag-edge {
+    stroke-dasharray: var(--edge-len, 200);
+    stroke-dashoffset: var(--edge-len, 200);
+    animation: dag-draw 0.7s var(--ease-out) var(--edge-delay, 0s) forwards;
+  }
+
+  .dag-reveal {
+    opacity: 0;
+    animation: dag-fade 0.4s var(--ease-out) var(--reveal-delay, 1.2s) forwards;
+  }
+
+  .savings-rise {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: savings-rise 0.4s var(--ease-out) 1.4s forwards;
+  }
+
+  /*
+   * Nodes answer for themselves on hover or focus. A node is not a control --
+   * it opens nothing and goes nowhere -- so it keeps the default cursor and
+   * only firms up its border.
+   */
+  .dag-node {
+    cursor: default;
+    outline: none;
+  }
+
+  .dag-node-box {
+    stroke: transparent;
+    transition: stroke 0.15s var(--ease-out);
+  }
+
+  .dag-node:hover .dag-node-box,
+  .dag-node:focus-visible .dag-node-box {
+    stroke: var(--color-amber);
+  }
+
+  .dag-tip {
+    animation: dag-tip-in 0.15s var(--ease-out) forwards;
+  }
+
+  /* Typed-command caret for the hero demo. */
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    translate: 0 0.16em;
+    background: var(--color-teal);
+    animation: caret-blink 1s steps(1, end) infinite;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Section illumination
+   *
+   * Deliberately under the threshold where amber reads as a colour: 7% at the
+   * centre, blurred across 40px, so the section comes forward without the body
+   * copy taking a tint. z-index -1 inside an isolated stacking context, so it
+   * cannot escape behind the section ground or paint over the text above it.
+   * ------------------------------------------------------------------ */
+
+  .section-glow {
+    position: absolute;
+    top: -56px;
+    left: -96px;
+    z-index: -1;
+    width: 320px;
+    height: 320px;
+    border-radius: var(--radius-chip);
+    background: radial-gradient(
+      closest-side,
+      rgba(255, 178, 36, 0.07),
+      transparent
+    );
+    filter: blur(40px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out);
+  }
+
+  .section-glow.is-lit {
+    opacity: 1;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Compatibility belt
+   * ------------------------------------------------------------------ */
+
+  /*
+   * Names dissolve at both ends rather than being cut off mid-word, which
+   * would read as a clipping bug rather than as a belt -- and keeps a
+   * half-word from butting up against the static label.
+   */
+  .belt-track {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 40px,
+      black calc(100% - 40px),
+      transparent
+    );
+  }
+
+  /*
+   * One cycle carries the run left by exactly one copy of the list, so the
+   * motion is seamless. 40s is slow enough to read a name in passing and slow
+   * enough not to pull the eye off the headline.
+   */
+  .belt-run {
+    animation: belt-scroll 40s linear infinite;
+  }
+
+  .belt:hover .belt-run {
+    animation-play-state: paused;
+  }
+
+  /* ---------------------------------------------------------------------
+   * Cost comparison bars
+   * ------------------------------------------------------------------ */
+
+  /*
+   * Width rather than transform, because the bar has to actually take up the
+   * space it claims -- a scaled bar would distort its own border and its
+   * label. The border colour is owned here rather than by a Tailwind utility,
+   * which would win the cascade and paint a visible 2px sliver before the bar
+   * had grown at all.
+   */
+  .cost-fill {
+    width: 0;
+    border-color: transparent;
+    transition:
+      width 0.7s var(--ease-out) var(--delay, 0s),
+      border-color 0.7s var(--ease-out) var(--delay, 0s);
+  }
+
+  .cost-fill[data-lit] {
+    width: var(--to);
+    border-color: var(--color-teal-line);
+  }
+
+  .cost-waste {
+    width: 0;
+    transition: width 0.7s var(--ease-out) var(--delay, 0s);
+  }
+
+  .cost-waste[data-lit] {
+    width: var(--to);
+  }
+
+  /* ------------------------------------------------------------------ */
+
+  @keyframes rise-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes dag-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes dag-fade {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes savings-rise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes dag-tip-in {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes belt-scroll {
+    to {
+      transform: translateX(var(--belt-shift, -12.5%));
+    }
+  }
+
+  /*
+   * Everything animated on this page has an end state worth showing. Under
+   * reduced motion it is simply shown, rather than shown faster.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .dag-edge {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+
+    .dag-reveal,
+    .savings-rise,
+    .dag-tip,
+    .eyebrow,
+    .word,
+    .hero-body {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+
+    .caret,
+    .section-glow,
+    .cost-fill,
+    .cost-waste {
+      transition: none;
+      animation: none;
+    }
+
+    /* A belt that cannot move is just a list, so show one copy of it. */
+    .belt-run {
+      animation: none;
+      transform: none;
+    }
+
+    .belt-run > *:not(:first-child) {
+      display: none;
+    }
   }
 }

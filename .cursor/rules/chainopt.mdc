@@ -7,14 +7,22 @@ alwaysApply: true
 ## What this is
 ChainOpt analyzes LLM pipelines and surfaces evidence-backed recommendations for reducing cost and latency. Python SDK + CLI, FastAPI analysis service, Supabase Postgres with pgvector, Next.js dashboard.
 
-## Authoritative spec
-The technical spec is docs/SPEC.md. When a task prompt says "per Section N" or "per the masterplan", it means docs/SPEC.md. Read the referenced section before writing code. Do not modify docs/SPEC.md unless a task explicitly says to.
+## Repo state
+main was stripped to the marketing site only (commit 86fb684). The Python SDK, CLI,
+analysis service, and docs/SPEC.md live on the `archive/pre-revamp` branch, not here.
+Do not cite docs/SPEC.md, packages/chainopt/, or a "masterplan" while working on main --
+read them from the archive branch if a task needs them.
 
 ## Repo boundaries
-apps/landing/ is the existing marketing site. Never modify, move, refactor, or reference it. It is out of scope for every task.
+apps/landing/ is the active surface and is in scope. It is the only application
+currently on main; packages/, services/, docs/, and apps/dashboard/ are empty
+placeholders. Do not scaffold them without being asked.
 
 ## Non-negotiables
-- Never invent model names, model IDs, or pricing. All of that lives in packages/chainopt/src/chainopt/registry/models.json, which is human-maintained. Read it; never write it. If a model is missing, fail loudly rather than guessing.
+- Never invent model names, model IDs, or pricing. The human-maintained registry
+  (packages/chainopt/src/chainopt/registry/models.json) is on the `archive/pre-revamp`
+  branch. If a model or price is needed on main and is not in that registry, fail loudly
+  rather than guessing -- this includes marketing copy on the landing page.
 - Never fabricate savings numbers, benchmark results, or test output. If you did not run it, say you did not run it.
 - The SDK must never raise into user code. Every chainopt code path inside the interception layer is wrapped in try/except and degrades to silence.
 - Every task ends with tests that actually run. Paste real command output. Do not write "tests pass" without the output.

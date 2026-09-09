@@ -1,11 +1,41 @@
+import Link from "next/link";
+
+import { Wordmark } from "@/components/wordmark";
+
+const links = [
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/pricing#questions", label: "FAQ" },
+  { href: "/early-access", label: "Early access" },
+];
+
 export function Footer() {
   return (
-    <footer className="border-t border-zinc-800 px-[var(--content-x)] py-8">
-      <div className="mx-auto flex w-full max-w-[var(--content-max)] flex-col gap-4">
-        <span className="font-terminal text-sm text-white">ChainOpt</span>
-        <p className="text-xs text-zinc-600">
-          Built by an independent developer. Not affiliated with LangChain or any
-          LLM provider.
+    <footer className="py-12">
+      <div className="wrap flex flex-col gap-8">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <Link href="/" aria-label="chainopt home">
+            <Wordmark size={18} />
+          </Link>
+
+          {/* The nav hides below 640px, so the footer is where a phone gets
+              its way around the site. */}
+          <nav aria-label="Footer" className="flex flex-wrap gap-6">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-sm text-[0.9rem] text-muted transition-colors duration-150 ease-out hover:text-text"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <p className="max-w-[56ch] text-[0.85rem] text-muted">
+          Built by an independent developer. Not affiliated with LangChain,
+          OpenAI, Anthropic, or any other provider named on this page.
         </p>
       </div>
     </footer>

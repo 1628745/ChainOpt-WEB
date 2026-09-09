@@ -1,129 +1,116 @@
-import { ChevronDown } from "lucide-react";
-import type { ReactNode } from "react";
+import { CostBar } from "@/components/cost-bar";
+import { Evidence } from "@/components/evidence";
+import { SectionGlow } from "@/components/section-glow";
+import { QUOTES, Testimonial } from "@/components/testimonial";
+import {
+  Badge,
+  MetricChip,
+  Panel,
+  PanelBody,
+  PanelFoot,
+  PanelHead,
+  SavingsLine,
+} from "@/components/ui/primitives";
 
-import { cn } from "@/lib/utils";
-
-function FindingBadge({
-  children,
-  className,
-}: {
-  children: string;
-  className?: string;
-}) {
-  return (
-    <span
-      className={cn(
-        "inline-block font-terminal text-xs tracking-wide uppercase",
-        className,
-      )}
-    >
-      {children}
-    </span>
-  );
-}
-
-function FindingCardShell({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "border border-zinc-700 bg-zinc-900",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-}
-
-function RedundancyFindingCard() {
-  return (
-    <FindingCardShell>
-      <div className="p-6">
-        <FindingBadge className="bg-amber-950 px-2 py-1 text-amber-400">
-          REDUNDANCY
-        </FindingBadge>
-
-        <h3 className="mt-4 text-base font-medium text-white">
-          Steps 3 → 7 are semantically equivalent
-        </h3>
-
-        <p className="mt-3 font-terminal text-xs leading-relaxed text-zinc-400">
-          Prompt similarity: 0.94 · Output similarity: 0.89 · 847 runs
-          observed
-        </p>
-
-        <hr className="my-6 border-zinc-700" />
-
-        <p className="text-lg text-white">
-          $38.20 / month estimated savings
-        </p>
-
-        <p className="mt-4 text-sm leading-relaxed text-zinc-300">
-          These two calls share nearly identical prompt templates and produce
-          structurally equivalent outputs. Step 7 can likely be removed and its
-          downstream context populated from Step 3&apos;s response.
-        </p>
-
-        <div
-          className="mt-6 flex cursor-default items-center justify-between border border-zinc-700 bg-zinc-950 px-4 py-3"
-          role="presentation"
-        >
-          <span className="font-terminal text-sm text-zinc-300">
-            See evidence (4 run pairs)
-          </span>
-          <ChevronDown className="size-4 shrink-0 text-zinc-500" aria-hidden />
-        </div>
-
-        <p className="mt-6 font-terminal text-[0.6875rem] leading-relaxed text-zinc-500">
-          Detected via pgvector cosine similarity + output structure comparison
-        </p>
-      </div>
-    </FindingCardShell>
-  );
-}
-
-function CollapsedFindingCard() {
-  return (
-    <FindingCardShell>
-      <div className="flex items-start justify-between gap-4 p-5">
-        <div className="min-w-0">
-          <FindingBadge className="bg-sky-950 px-2 py-1 text-sky-400">
-            OVERSIZING
-          </FindingBadge>
-          <h3 className="mt-3 text-sm font-medium text-zinc-300">
-            GPT-4o used for template slot-filling
-          </h3>
-        </div>
-        <ChevronDown className="mt-1 size-4 shrink-0 text-zinc-600" aria-hidden />
-      </div>
-    </FindingCardShell>
-  );
-}
+const evidence = [
+  {
+    step: "step 3 · sonnet",
+    prompt: "Summarise the ticket below in two sentences for triage...",
+  },
+  {
+    step: "step 6 · sonnet",
+    prompt: "Give a two-sentence summary of this ticket so it can be routed...",
+  },
+];
 
 export function FindingPreview() {
   return (
-    <section className="border-t border-zinc-800 px-[var(--content-x)] py-24">
-      <div className="mx-auto w-full max-w-[var(--content-max)]">
-        <h2 className="text-2xl font-medium tracking-tight text-white">
-          Here&apos;s what a finding will look like
-        </h2>
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-400">
-          Every recommendation includes the detection type, similarity scores,
-          the number of real runs it was observed in, estimated monthly cost
-          savings, and a panel of supporting evidence from your actual pipeline
-          runs. The cards below are illustrative examples.
+    <section id="finding" className="section relative isolate overflow-x-clip border-b border-line">
+      <div className="wrap">
+        <SectionGlow />
+        <h2>What a finding actually looks like</h2>
+        <p className="mt-5 max-w-[62ch] text-[1.05rem] text-muted">
+          A finding is a claim with its working shown: what kind of waste it is,
+          how confident the match is, how many real runs it appeared in, and the
+          prompts it was drawn from. Open one to check the reasoning yourself.
         </p>
 
-        <div className="mt-10 max-w-2xl space-y-3">
-          <RedundancyFindingCard />
-          <CollapsedFindingCard />
+        <div className="mt-11 grid items-start gap-5 md:grid-cols-[1.25fr_0.75fr]">
+          <Panel>
+            <PanelHead>
+              <Badge>redundancy</Badge>
+              <span data-numeric>observed in 847 runs</span>
+            </PanelHead>
+
+            <PanelBody>
+              <h3 className="max-w-[20ch] text-[clamp(1.35rem,2.4vw,1.7rem)] leading-[1.15] font-bold tracking-[-0.02em] text-text">
+                Steps 3 and 6 do the same work
+              </h3>
+
+              <SavingsLine amount={38.2} className="mt-5" />
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <MetricChip label="prompt similarity" value="0.94" />
+                <MetricChip label="output similarity" value="0.89" />
+                <MetricChip label="calls / month" value="1,240" />
+              </div>
+
+              <p className="mt-5 max-w-[58ch] text-[1rem] leading-[1.65] text-muted">
+                Both calls send near-identical prompts and return summaries with
+                the same structure. Step 6 can most likely be dropped and its
+                downstream context filled from step 3&apos;s response.
+              </p>
+
+              <Evidence
+                items={evidence}
+                note="matched on embedding cosine similarity, then confirmed against output structure"
+              />
+            </PanelBody>
+
+            <PanelFoot>
+              detected via prompt embedding comparison across 847 recorded runs
+            </PanelFoot>
+          </Panel>
+
+          <Panel>
+            <PanelHead>
+              <Badge tone="teal">oversizing</Badge>
+              <span data-numeric>observed in 612 runs</span>
+            </PanelHead>
+
+            <PanelBody>
+              <h3 className="max-w-[20ch] text-[clamp(1.35rem,2.4vw,1.7rem)] leading-[1.15] font-bold tracking-[-0.02em] text-text">
+                A frontier model is filling in a template
+              </h3>
+
+              <SavingsLine amount={21.4} className="mt-5" />
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <MetricChip label="step" value="4" />
+                <MetricChip label="opus → haiku" value="0.99 match" />
+              </div>
+
+              <p className="mt-5 text-[1rem] leading-[1.65] text-muted">
+                The step&apos;s outputs never deviate from a fixed shape and the
+                prompt supplies every value, so the task does not need the model
+                it is being sent to. ChainOpt names the cheaper model that
+                covered the same outputs across the observed runs.
+              </p>
+            </PanelBody>
+
+            <PanelFoot>detected via output-schema stability across runs</PanelFoot>
+          </Panel>
         </div>
+
+        <p className="mt-5 text-[0.8rem] text-muted">
+          Illustrative example — not measured results.
+        </p>
+
+        {/* The two panels above, stated as one picture. */}
+        <CostBar className="mt-10" />
+
+        {/* Renders only once a real quote replaces the placeholder. */}
+        <Testimonial quote={QUOTES.finding} className="mt-8 max-w-[720px]" />
       </div>
     </section>
   );

@@ -15,9 +15,9 @@ export default function Home() {
       <CompatBelt />
       <TheGap />
       <NextStep
-        line="Three commands from install to first finding."
-        primary={{ href: "/how-it-works", label: "See how it works" }}
-        secondary={{ href: "/early-access", label: "Request access" }}
+        line="ChainOpt is in private beta and I am taking testers now."
+        primary={{ href: "/early-access", label: "Request access" }}
+        secondary={{ href: "/how-it-works", label: "See how it works" }}
       />
     </>
   );

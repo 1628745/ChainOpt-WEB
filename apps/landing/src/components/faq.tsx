@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * over their own source.
  *
  * The privacy answer leads and opens by default, because it is the question
- * this product most wants to be asked -- an analyser that never sends your
+ * this product most wants to be asked: an analyzer that never sends your
  * prompts anywhere is the differentiator, and it should not cost a click.
  */
 
@@ -20,7 +20,12 @@ const ITEMS: Item[] = [
   {
     question: "Do you store my data?",
     answer:
-      "No. ChainOpt runs entirely on your machine. The CLI reads your local traces, computes everything locally, and prints to stdout. Your prompts, responses, and source code never leave your environment — there is no hosted backend to send them to.",
+      "No. ChainOpt runs entirely on your machine. The CLI reads your local traces, computes everything locally, and prints to stdout. Your prompts, responses, and source code never leave your environment, because there is no hosted backend to send them to.",
+  },
+  {
+    question: "How do I install it?",
+    answer:
+      "Not from PyPI. ChainOpt is in private beta and the package is not published to any public index, so testers get a signed wheel and the install line together with their invite. Everything after that runs from the chainopt command.",
   },
   {
     question: "What frameworks does it support?",
@@ -30,17 +35,17 @@ const ITEMS: Item[] = [
   {
     question: "Will it change my code?",
     answer:
-      "Only if you ask it to. Analysis is read-only by default; fixes are suggested as diffs you review and apply yourself.",
+      "Only if you ask it to. Analysis is read-only by default, and fixes are suggested as diffs you review and apply yourself.",
   },
   {
     question: "How accurate are the savings estimates?",
     answer:
-      "Estimates are computed from your actual observed runs — real token counts at current API prices — not benchmarks. Findings below confidence thresholds are suppressed rather than guessed.",
+      "They are computed from your own observed runs, at real token counts and current API prices, rather than from a benchmark. Findings below the confidence threshold are suppressed rather than guessed. A parallelism finding reports seconds instead of dollars, because running two independent steps at the same time does not lower the bill.",
   },
   {
     question: "What does it cost to try?",
     answer:
-      "The free tier covers 1,000 analyzed calls per month, no card required.",
+      "Nothing while ChainOpt is in private beta. After general release the free tier covers 1,000 analyzed calls a month.",
   },
 ];
 
@@ -117,7 +122,7 @@ function Row({
         style={{ maxHeight: open ? height || "none" : 0 }}
       >
         <div ref={body} className="px-5 pb-5">
-          <p className="max-w-[62ch] text-[0.95rem] text-muted">
+          <p className="max-w-[70ch] text-[0.95rem] text-muted">
             {item.answer}
           </p>
         </div>
@@ -137,7 +142,7 @@ export function Faq() {
         <SectionGlow />
         <h2>What developers ask first</h2>
 
-        <div className="mt-11 max-w-[840px] overflow-hidden rounded-panel border border-line bg-surface">
+        <div className="mt-11 overflow-hidden rounded-panel border border-line bg-surface">
           {ITEMS.map((item, i) => (
             <Row
               key={item.question}

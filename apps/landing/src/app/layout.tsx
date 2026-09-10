@@ -9,7 +9,7 @@ import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const description =
-  "ChainOpt analyses your LLM agent pipelines and points at the calls costing you money — redundant pairs, oversized models, and work that could run in parallel — with the prompt and response evidence behind every finding.";
+  "ChainOpt analyzes your LLM agent pipelines and points at the calls costing you money: redundant pairs, oversized models, and work that could run in parallel, with the prompt and response evidence behind every finding.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

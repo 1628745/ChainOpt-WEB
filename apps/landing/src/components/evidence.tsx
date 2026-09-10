@@ -4,14 +4,25 @@ import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-type Item = { step: string; prompt: string };
+export type EvidenceItem = {
+  /** Which call this came from, e.g. `step 3 · sonnet`. */
+  step: string;
+  prompt: string;
+  response: string;
+};
 
 /**
- * Findings are evidence-first, so the prompts behind a claim are always one
- * click away. Height is measured rather than guessed so the panel animates
- * to its real content height.
+ * Findings are evidence-first, so the calls behind a claim are always one
+ * click away, on every finding rather than on the first one.
+ *
+ * Prompt and response both, in full. The panel used to promise "the prompts
+ * and responses it was drawn from" and then show two prompts with the ends
+ * cut off, which is the one thing an evidence panel cannot do.
+ *
+ * Height is measured rather than guessed so the panel animates to its real
+ * content height.
  */
-export function Evidence({ items, note }: { items: Item[]; note: string }) {
+export function Evidence({ items }: { items: EvidenceItem[] }) {
   const [open, setOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const body = useRef<HTMLDivElement>(null);
@@ -67,16 +78,31 @@ export function Evidence({ items, note }: { items: Item[]; note: string }) {
         className="overflow-hidden transition-[max-height] duration-[350ms] ease-out"
         style={{ maxHeight: open ? height : 0 }}
       >
-        <div ref={body} className="space-y-3 pt-4">
+        <div ref={body} className="space-y-5 pt-4">
           {items.map((item) => (
             <div key={item.step}>
               <p className="font-mono text-[0.78rem] text-teal">{item.step}</p>
-              <p className="mt-2 rounded-inner border border-line bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] leading-relaxed text-muted">
-                {item.prompt}
-              </p>
+
+              <dl className="mt-2 space-y-2">
+                <div>
+                  <dt className="font-mono text-[0.72rem] text-muted">
+                    prompt
+                  </dt>
+                  <dd className="mt-1 rounded-inner border border-line bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] leading-relaxed text-text">
+                    {item.prompt}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-mono text-[0.72rem] text-muted">
+                    response
+                  </dt>
+                  <dd className="mt-1 rounded-inner border border-line bg-ink px-3.5 py-2.5 font-mono text-[0.8rem] leading-relaxed text-muted">
+                    {item.response}
+                  </dd>
+                </div>
+              </dl>
             </div>
           ))}
-          <p className="font-mono text-[0.76rem] text-muted">{note}</p>
         </div>
       </div>
     </div>

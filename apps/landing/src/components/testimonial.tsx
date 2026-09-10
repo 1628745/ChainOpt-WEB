@@ -25,15 +25,15 @@ export type Quote = {
 };
 
 export const QUOTES: Record<"finding" | "pricing", Quote> = {
-  // PLACEHOLDER — sample copy showing the shape of a quote that would earn
+  // PLACEHOLDER: sample copy showing the shape of a quote that would earn
   // its place here: specific, about one finding, with a number in it.
   finding: {
-    text: "It found two summarisation steps we had written eight months apart and never noticed were the same call. The evidence panel is what made it an easy sell internally.",
+    text: "It found two summarization steps we had written eight months apart and never noticed were the same call. The evidence panel is what made it an easy sell internally.",
     name: "Placeholder Name",
     role: "role · company",
     placeholder: true,
   },
-  // PLACEHOLDER — a pricing-adjacent quote should speak to what the spend
+  // PLACEHOLDER: a pricing-adjacent quote should speak to what the spend
   // became, not to how much the product is liked.
   pricing: {
     text: "We were arguing about which model to downgrade. It turned out the cheaper fix was deleting a call neither of us had looked at.",
@@ -56,7 +56,7 @@ export function Testimonial({
   return (
     <figure
       className={cn(
-        "rounded-panel border border-line border-l-[3px] border-l-amber bg-surface px-5 py-4",
+        "rounded-panel border border-line bg-surface px-5 py-4",
         className,
       )}
     >
@@ -64,7 +64,7 @@ export function Testimonial({
         {quote.text}
       </blockquote>
       <figcaption className="mt-3 font-mono text-[0.75rem] text-muted">
-        — {quote.name} · {quote.role}
+        {quote.name} · {quote.role}
       </figcaption>
     </figure>
   );

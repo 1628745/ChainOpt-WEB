@@ -22,7 +22,7 @@ export default function HowItWorksPage() {
       <HowItWorks />
       <FindingPreview />
       <NextStep
-        line="There is nothing to pay while ChainOpt is in private beta."
+        line="Those three findings came out of one six-step pipeline. Yours is probably larger."
         primary={{ href: "/early-access", label: "Request access" }}
         secondary={{ href: "/pricing", label: "See pricing" }}
       />

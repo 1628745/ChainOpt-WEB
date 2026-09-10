@@ -7,7 +7,7 @@ import { Pricing } from "@/components/pricing";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Usage-based pricing with no per-seat charge and no enterprise tier, plus answers on what ChainOpt stores, what it supports, and how its savings estimates are computed.",
+    "Two planned plans, no per-seat charge and no enterprise tier, plus answers on what ChainOpt stores, what it supports, and how its savings estimates are computed.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -21,7 +21,7 @@ export default function PricingPage() {
       <Pricing />
       <Faq />
       <NextStep
-        line="Private beta is free, and there is no card to enter."
+        line="Private beta is running now, and I am taking testers."
         primary={{ href: "/early-access", label: "Request access" }}
         secondary={{ href: "/how-it-works", label: "How it works" }}
       />

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import { Footer } from "@/components/footer";
 import { SiteHeader } from "@/components/site-header";
-import { archivo, ibmPlexMono } from "@/lib/fonts";
+import { archivo, geistMono } from "@/lib/fonts";
 import { siteUrl } from "@/lib/site";
 
 import "./globals.css";
@@ -54,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${ibmPlexMono.variable}`}
+      className={`${archivo.variable} ${geistMono.variable}`}
       /*
        * Next 16 stopped overriding `scroll-behavior` during navigation. This
        * attribute opts back in, so a future route change lands instantly while

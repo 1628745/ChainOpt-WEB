@@ -56,24 +56,22 @@ const tiers: Tier[] = [
   },
 ];
 
-function Check({ featured }: { featured?: boolean }) {
+/**
+ * A list marker, not a verdict. These were checkmarks, teal on Free and amber
+ * on Pro, which spent both accent colours on decoration: nothing in a plan's
+ * feature list is a saving or a finding. The marker is the small rounded
+ * square the design system reserves for pricing, in the Pro card's own border
+ * colour and otherwise in the neutral line.
+ */
+function Marker({ featured }: { featured?: boolean }) {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
+    <span
       aria-hidden
-      className={cn("mt-[5px] shrink-0", featured ? "text-amber" : "text-teal")}
-    >
-      <path
-        d="M2.5 7.5 5.5 10.5 11.5 3.5"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      className={cn(
+        "mt-[7px] size-2.5 shrink-0 rounded-[3px]",
+        featured ? "bg-amber-line-strong" : "bg-line-strong",
+      )}
+    />
   );
 }
 
@@ -111,7 +109,7 @@ function TierCard({ name, price, note, features, variant, featured }: Tier) {
       <ul className="mt-7 flex-1 space-y-3">
         {features.map((feature) => (
           <li key={feature} className="flex gap-3 text-[0.93rem]">
-            <Check featured={featured} />
+            <Marker featured={featured} />
             <span className="text-text">{feature}</span>
           </li>
         ))}
@@ -138,7 +136,7 @@ export function Pricing() {
           private beta there is nothing to pay and no card to enter.
         </p>
 
-        <div className="mt-11 grid gap-5 md:grid-cols-2">
+        <div className="mt-11 grid max-w-[840px] gap-5 md:grid-cols-2">
           {tiers.map((tier) => (
             <TierCard key={tier.name} {...tier} />
           ))}

@@ -132,12 +132,15 @@ export function HeroDemo() {
         <div className="rounded-feature border border-line panel-surface">
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-line px-5 py-3 font-mono text-[0.72rem] text-muted">
             <span>pipeline map · {PIPELINE}</span>
+            {/* Same clothes as the copy button on a terminal block: a word,
+                not a glyph. The play and replay characters it carried were
+                type standing in for an icon set the site does not have. */}
             <button
               type="button"
               onClick={start}
               className="rounded-inner border border-line px-2 py-1 font-mono text-[0.72rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-amber"
             >
-              {hasRun ? "↻ replay" : "▶ run demo"}
+              {hasRun ? "replay" : "run demo"}
             </button>
           </div>
 
@@ -197,13 +200,21 @@ export function HeroDemo() {
                   )}
                 />
                 <span
-                  className={
-                    finding.tone === "amber" ? "text-amber" : "text-teal"
-                  }
+                  className={cn(
+                    "shrink-0",
+                    finding.tone === "amber" ? "text-amber" : "text-teal",
+                  )}
                 >
                   {finding.kind}
                 </span>
-                <span className="min-w-0 text-muted">{finding.where}</span>
+                {/* Below 640px the location takes a line of its own beneath
+                    the finding, indented past the dot, so the finding and its
+                    figure stay together on the first line. It used to wrap
+                    wherever it ran out of room, which left figures stranded on
+                    lines by themselves. */}
+                <span className="min-w-0 text-muted max-sm:order-last max-sm:basis-full max-sm:pl-4 sm:flex-1">
+                  {finding.where}
+                </span>
                 <span
                   className={cn(
                     "ml-auto shrink-0",

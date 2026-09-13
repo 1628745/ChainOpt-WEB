@@ -8,6 +8,13 @@ import { cn } from "@/lib/utils";
  * the third one quietly changed meaning on our own row: a limitation for
  * everybody else, a benefit for us. Every row now answers the same question in
  * the same column, including ours.
+ *
+ * Our row is marked the way the system marks a finding: an amber wash that
+ * fades out across the row, an amber title, and body text at full brightness
+ * where the competitor rows stay muted. The wash needs room either side of
+ * the text, so every row carries the same inner padding and the table is
+ * pulled out by that amount; the highlight used to pad only its own cells,
+ * which indented our name twenty pixels off the column above it.
  */
 
 type Row = {
@@ -65,7 +72,7 @@ export function TheGap() {
         <SectionGlow />
         <h2>Where ChainOpt sits next to your tracing stack</h2>
 
-        <table className="mt-12 w-full border-collapse text-left">
+        <table className="mt-12 w-full border-collapse text-left md:-mx-5 md:w-[calc(100%+2.5rem)]">
           <caption className="sr-only">
             What tracing tools, model routers and ChainOpt each do, and what
             each one leaves for you to decide.
@@ -79,7 +86,8 @@ export function TheGap() {
                   scope="col"
                   className={cn(
                     "border-b border-line pb-3 font-mono text-[0.74rem] font-normal text-muted",
-                    i === 0 ? "w-[220px] pr-6" : "px-6",
+                    i === 0 ? "w-[240px] pr-6 pl-5" : "px-6",
+                    i === COLUMNS.length - 1 && "pr-5",
                   )}
                 >
                   {column}
@@ -94,18 +102,21 @@ export function TheGap() {
                 key={row.tool}
                 className={cn(
                   "mb-2 block rounded-panel border border-line last:mb-0 md:mb-0 md:table-row md:rounded-none md:border-x-0 md:border-t-0",
-                  row.ours && "bg-surface-2",
+                  row.ours &&
+                    "bg-[linear-gradient(90deg,var(--color-amber-dim),transparent_65%)]",
                 )}
               >
                 <th
                   scope="row"
-                  className={cn(
-                    "block px-5 pt-5 text-left align-top font-normal md:table-cell md:px-0 md:py-6 md:pr-6",
-                    row.ours && "md:pl-5",
-                  )}
+                  className="block px-5 pt-5 text-left align-top font-normal md:table-cell md:py-6 md:pr-6"
                 >
                   <CellLabel>{COLUMNS[0]}</CellLabel>
-                  <span className="block text-[1.05rem] font-semibold tracking-[-0.01em] text-text">
+                  <span
+                    className={cn(
+                      "block text-[1.05rem] font-semibold tracking-[-0.01em]",
+                      row.ours ? "text-amber" : "text-text",
+                    )}
+                  >
                     {row.tool}
                   </span>
                   <span className="mt-1 block font-mono text-[0.74rem] text-muted">
@@ -120,8 +131,8 @@ export function TheGap() {
 
                 <td
                   className={cn(
-                    "block px-5 pt-4 pb-5 align-top text-[0.95rem] text-muted md:table-cell md:px-6 md:py-6",
-                    row.ours && "md:pr-5",
+                    "block px-5 pt-4 pb-5 align-top text-[0.95rem] md:table-cell md:py-6 md:pr-5 md:pl-6",
+                    row.ours ? "text-text" : "text-muted",
                   )}
                 >
                   <CellLabel>{COLUMNS[2]}</CellLabel>

@@ -79,6 +79,10 @@ export function SiteHeader() {
           </Link>
         )}
 
+        {/* The control names what it does: it opens the menu, then closes
+            it. The current page is marked exactly as the desktop nav marks
+            it, full brightness against muted; amber here would have made the
+            page you are on look like a warning. */}
         <button
           type="button"
           onClick={() => setOpenFor(open ? null : pathname)}
@@ -94,7 +98,7 @@ export function SiteHeader() {
               strokeLinecap="round"
             />
           </svg>
-          Menu
+          {open ? "Close" : "Menu"}
         </button>
       </div>
 
@@ -113,8 +117,8 @@ export function SiteHeader() {
                 href={link.href}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "border-b border-line py-3 text-[0.95rem] transition-colors duration-150 ease-out",
-                  current ? "text-amber" : "text-text",
+                  "border-b border-line py-3 text-[0.95rem] transition-colors duration-150 ease-out hover:text-text",
+                  current ? "text-text" : "text-muted",
                 )}
               >
                 {link.label}

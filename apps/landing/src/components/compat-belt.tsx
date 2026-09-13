@@ -21,9 +21,11 @@ export function CompatBelt() {
   return (
     <section className="border-b border-line bg-ink py-4">
       <div className="wrap">
+        {/* A sentence in the site's own voice, so one family throughout:
+            "works with" in mono put a label and its prose in two typefaces on
+            one line. */}
         <p className="text-[0.85rem] text-muted">
-          <span className="font-mono text-[0.72rem]">works with</span>{" "}
-          <span className="text-text">{WORKS_WITH.join(", ")}</span>
+          Works with <span className="text-text">{WORKS_WITH.join(", ")}</span>
         </p>
       </div>
     </section>

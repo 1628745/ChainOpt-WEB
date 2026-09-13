@@ -45,7 +45,7 @@ export function TerminalBlock({ lines, className }: TerminalBlockProps) {
   return (
     <div
       className={cn(
-        "rounded-term border border-line bg-surface px-4 py-3.5 font-mono text-[0.85rem] leading-[1.7]",
+        "rounded-term border border-line bg-surface px-4 py-3.5 font-mono text-[0.8rem] leading-[1.7] sm:text-[0.85rem]",
         className,
       )}
     >

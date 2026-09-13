@@ -22,7 +22,13 @@ export type EvidenceItem = {
  * Height is measured rather than guessed so the panel animates to its real
  * content height.
  */
-export function Evidence({ items }: { items: EvidenceItem[] }) {
+export function Evidence({
+  items,
+  className,
+}: {
+  items: EvidenceItem[];
+  className?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const body = useRef<HTMLDivElement>(null);
@@ -45,12 +51,18 @@ export function Evidence({ items }: { items: EvidenceItem[] }) {
   }
 
   return (
-    <div className="mt-6">
+    <div className={className}>
       <button
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-4 rounded-inner border border-line bg-surface-2 px-4 py-3 font-mono text-[0.82rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-amber"
+        /*
+         * Full width on a phone, where it is a thumb target; from 640px it
+         * sizes to its label with the chevron beside it, like the copy and
+         * run-demo buttons. Stretched across a 560px column it read as a
+         * select box.
+         */
+        className="flex w-full items-center justify-between gap-4 rounded-inner border border-line bg-surface-2 px-4 py-3 font-mono text-[0.82rem] text-muted transition-colors duration-150 ease-out hover:border-amber hover:text-amber sm:w-auto sm:justify-start sm:gap-3"
       >
         {open ? "hide the evidence" : "show the evidence"}
         <svg

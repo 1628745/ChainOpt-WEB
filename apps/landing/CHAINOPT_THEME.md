@@ -116,10 +116,12 @@ the same hand.
   Tailwind's `lg`/`xl`/`2xl` are reset to `initial` so nothing drifts past them.
 - **Alignment:** everything is left-aligned. No centred hero, no centred section
   headers.
-- **Grids:** hero `minmax(0,1.05fr) minmax(0,.95fr)`; steps `56px 1fr 380px`;
-  finding cards `1.25fr .75fr` (one dominant panel plus one supporting, never
-  equal twins); comparison rows `240px 1fr` full-width and stacked, not a card
-  trio.
+- **Grids:** hero `minmax(0,1.05fr) minmax(0,.95fr)`; steps `1fr 420px`;
+  finding panels stack full-width, one per row, and inside each the body is
+  `1.15fr .85fr` (claim, explanation and evidence on the dominant side, the
+  figure and its metrics on the supporting side; never equal columns, never
+  a row of equal cards); comparison rows `240px 1fr 1fr` full-width and
+  stacked, not a card trio.
 - **Radii:** panels 14px, large feature panels 18px, terminal blocks 12px,
   buttons 10px, nav CTA 9px, inner blocks and metrics 8px, chips and badges
   fully rounded (999px).

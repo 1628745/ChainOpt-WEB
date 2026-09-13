@@ -3,7 +3,6 @@
 import { track } from "@vercel/analytics";
 import { type FormEvent, useId, useState } from "react";
 
-import { SectionGlow } from "@/components/section-glow";
 import { Button, btn } from "@/components/ui/button";
 import { bookingUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -72,9 +71,11 @@ export function CtaWaitlist() {
       id="early-access"
       className="section relative isolate overflow-x-clip border-b border-line"
     >
+      {/* No section glow here. It lights the top-left corner of a section
+          because that is where a heading sits; on this page the only heading
+          is inside a centred card, and a glow off to its left read as a
+          smudge on the page rather than as the section coming forward. */}
       <div className="wrap">
-        <SectionGlow />
-
         <div className="mx-auto max-w-[720px]">
           <div className="rounded-feature border border-line panel-surface p-8 sm:p-10">
             <h2>ChainOpt is in private beta</h2>
@@ -128,10 +129,16 @@ export function CtaWaitlist() {
                   disabled={pending || done}
                   aria-describedby={message ? messageId : undefined}
                   aria-invalid={status === "error" || undefined}
+                  /*
+                   * Focus is the site-wide amber ring and nothing else. The
+                   * field also turned its own border amber on focus, which
+                   * drew two amber rectangles a couple of pixels apart. The
+                   * border is left to mean one thing: an error.
+                   */
                   className={cn(
-                    "min-w-0 flex-1 rounded-btn border border-line-strong bg-ink px-4 py-[13px] text-[0.95rem] text-text",
+                    "min-w-0 flex-1 rounded-btn border border-line-strong bg-ink px-4 py-[13px] text-[0.95rem] text-text caret-amber",
                     "placeholder:text-muted",
-                    "transition-colors duration-150 ease-out focus:border-amber",
+                    "transition-colors duration-150 ease-out",
                     "disabled:cursor-not-allowed disabled:opacity-60",
                     status === "error" && "border-amber",
                   )}
@@ -192,10 +199,12 @@ export function CtaWaitlist() {
             </p>
           </div>
 
+          {/* Prose in the site's own voice, so Archivo, not the lowercase
+              mono kicker it used to be. The numerals are metadata and sit in
+              muted mono; they were amber, which made three promises look
+              like three findings. */}
           <div className="mt-8">
-            <h3 className="font-mono text-[0.8rem] font-normal text-muted">
-              what happens next
-            </h3>
+            <h3>What happens next</h3>
             <ol className="mt-3 flex flex-col gap-2.5">
               {NEXT.map((line, i) => (
                 <li
@@ -204,7 +213,8 @@ export function CtaWaitlist() {
                 >
                   <span
                     aria-hidden
-                    className="shrink-0 font-mono text-[0.8rem] text-amber"
+                    data-numeric
+                    className="shrink-0 pt-px text-[0.8rem] text-muted"
                   >
                     {i + 1}
                   </span>

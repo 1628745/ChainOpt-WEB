@@ -59,9 +59,20 @@ export function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function Metrics({ children }: { children: ReactNode }) {
+export function Metrics({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <dl className="mt-5 flex flex-wrap gap-x-8 gap-y-4 border-y border-line py-4">
+    <dl
+      className={cn(
+        "flex flex-wrap gap-x-6 gap-y-4 border-y border-line py-4",
+        className,
+      )}
+    >
       {children}
     </dl>
   );

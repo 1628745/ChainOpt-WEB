@@ -78,7 +78,10 @@ export function HowItWorks() {
               className="grid items-start gap-5 md:grid-cols-[1fr_420px] md:gap-10"
             >
               <div>
-                <p className="font-mono text-[0.76rem] text-amber">
+                {/* Metadata in the muted mono the rest of the site uses for
+                    it. It was amber, which is the colour of a finding, and a
+                    step counter is not something to act on. */}
+                <p className="font-mono text-[0.76rem] text-muted">
                   step {i + 1} of {steps.length}
                 </p>
                 <h3 className="mt-2 text-[1.15rem]">{step.title}</h3>

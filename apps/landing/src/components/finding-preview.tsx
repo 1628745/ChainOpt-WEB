@@ -160,7 +160,22 @@ export function FindingPreview() {
           before you touch the code.
         </p>
 
-        <div className="mt-11 grid gap-5 md:grid-cols-3">
+        {/*
+          One finding per row, the way the product lists them. They were three
+          equal columns, which is the one arrangement the design system rules
+          out for finding cards: at a third of the page each card ran to five
+          hundred pixels, the metrics wrapped two-and-one, and the evidence
+          buttons landed at three different heights.
+
+          Inside each panel the body is the documented 1.15fr / .85fr split:
+          the claim, its explanation and the evidence on the dominant side,
+          the figure and its metrics on the supporting side. The supporting
+          column is as narrow as it can be while three metric labels still
+          sit on one row; at .75fr the longer ones wrapped two-and-one again.
+          Below 940px the grid is one column and reads in source order:
+          title, figure, metrics, explanation, evidence.
+        */}
+        <div className="mt-11 flex flex-col gap-5">
           {CARDS.map((card) => (
             <Panel key={card.id}>
               <PanelHead>
@@ -168,24 +183,28 @@ export function FindingPreview() {
                 <span data-numeric>{runs} runs analyzed</span>
               </PanelHead>
 
-              <PanelBody>
-                <h3 className="text-[clamp(1.2rem,2vw,1.45rem)] leading-[1.2] font-bold tracking-[-0.02em] text-text">
+              <PanelBody className="grid gap-x-12 gap-y-5 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:grid-rows-[auto_auto_1fr]">
+                <h3 className="text-[clamp(1.2rem,2vw,1.45rem)] leading-[1.2] font-bold tracking-[-0.02em] text-text md:col-start-1">
                   {card.title}
                 </h3>
 
-                <Gain value={card.value} unit={card.unit} className="mt-5" />
+                {/* The figure and what backs it, kept together so they stack
+                    as one column on the right and one block on a phone. */}
+                <div className="flex flex-col gap-5 md:col-start-2 md:row-span-3 md:row-start-1">
+                  <Gain value={card.value} unit={card.unit} />
 
-                <Metrics>
-                  {card.metrics.map(([label, value]) => (
-                    <Metric key={label} label={label} value={value} />
-                  ))}
-                </Metrics>
+                  <Metrics>
+                    {card.metrics.map(([label, value]) => (
+                      <Metric key={label} label={label} value={value} />
+                    ))}
+                  </Metrics>
+                </div>
 
-                <p className="mt-5 text-[0.95rem] leading-[1.65] text-muted">
+                <p className="max-w-[58ch] text-[0.95rem] leading-[1.65] text-muted md:col-start-1">
                   {card.body}
                 </p>
 
-                <Evidence items={card.evidence} />
+                <Evidence items={card.evidence} className="md:col-start-1" />
               </PanelBody>
 
               <PanelFoot>{card.method}</PanelFoot>

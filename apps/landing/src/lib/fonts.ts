@@ -1,10 +1,15 @@
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import { Archivo, Geist_Mono } from "next/font/google";
 
 /**
- * Two families, no more. Archivo carries display and body; IBM Plex Mono
- * carries everything the product would print as data -- code, labels,
- * metrics, metadata -- and ships true tabular numerals for figures in a
- * column.
+ * Two families, no more. Archivo carries display and body; Geist Mono carries
+ * everything the product would print as data -- code, labels, metrics,
+ * metadata -- and, being monospace, ships figures that align in a column for
+ * free.
+ *
+ * Geist Mono replaced IBM Plex Mono, whose typewriter slab reads warmer and
+ * older than the rest of the page. Geist is the closer relative of Archivo:
+ * same grotesque skeleton, so a metric label and the sentence above it look
+ * like they were drawn by the same hand.
  */
 
 export const archivo = Archivo({
@@ -14,9 +19,14 @@ export const archivo = Archivo({
   display: "swap",
 });
 
-export const ibmPlexMono = IBM_Plex_Mono({
+/**
+ * The variable cut rather than three static weights: one file covers 400
+ * through 600, which is every weight the site asks of it, and costs less than
+ * the two extra requests the static cuts would need.
+ */
+export const geistMono = Geist_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: "variable",
   display: "swap",
 });

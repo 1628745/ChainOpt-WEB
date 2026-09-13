@@ -67,24 +67,30 @@ Defined once in `globals.css` and exposed to Tailwind through `@theme inline`.
 
 ## 3. Typography
 
-Two families. Archivo carries display and body; IBM Plex Mono carries anything
-the product would print as data.
+Two families. Archivo carries display and body; Geist Mono carries anything the
+product would print as data. Geist replaced IBM Plex Mono, whose typewriter slab
+read warmer and older than the rest of the page; Geist shares Archivo's
+grotesque skeleton, so a metric label and the sentence above it look drawn by
+the same hand.
 
 | Element | Family | Size | Weight | Tracking | Line height |
 | --- | --- | --- | --- | --- | --- |
 | H1 | Archivo | `clamp(2.1rem, 4.6vw, 3.3rem)` | 800 | −0.03em | 1.08 |
 | H2 | Archivo | `clamp(1.7rem, 3.4vw, 2.4rem)` | 700 | −0.02em | 1.15 |
-| Finding title | Archivo | `clamp(1.35rem, 2.4vw, 1.7rem)` | 700 | −0.02em | 1.15 |
+| Finding title | Archivo | `clamp(1.2rem, 2vw, 1.45rem)` | 700 | −0.02em | 1.2 |
 | Savings figure | Archivo | `clamp(1.9rem, 3.4vw, 2.35rem)` | 800 | −0.03em | 1 |
 | H3 (step titles, FAQ questions) | Archivo | 1–1.2rem | 600 | −0.01em | default |
 | Body | Archivo | 16px | 400 | 0 | 1.6 |
 | Subtext / section intro | Archivo | 0.95–1.08rem, muted | 400 | 0 | 1.6 |
-| Terminal / code | IBM Plex Mono | 0.83–0.9rem | 400 | 0 | — |
-| Metric chips, footnotes, frame labels | IBM Plex Mono | 0.7–0.78rem | 400–600 | 0 | — |
+| Terminal / code | Geist Mono | 0.76–0.85rem | 400 | 0 | — |
+| Metric labels, footnotes, frame labels | Geist Mono | 0.7–0.78rem | 400–600 | 0 | — |
 
 **Rules:**
 
-- Headlines may split into strong/soft halves with a muted 700-weight span.
+- Headlines are one colour and one weight. The two-tone split, where a muted
+  700-weight span set up a brighter second half, is gone: it is the house style
+  of a landing-page template rather than a claim being made.
+- Headings carry `text-wrap: balance`, so no line is left with one word on it.
 - H2 caps at 22ch. Body and intro copy at 50–64ch. Text never runs the full
   container width.
 - **No labels above headings.** Sections are introduced by their H2 and
@@ -110,10 +116,12 @@ the product would print as data.
   Tailwind's `lg`/`xl`/`2xl` are reset to `initial` so nothing drifts past them.
 - **Alignment:** everything is left-aligned. No centred hero, no centred section
   headers.
-- **Grids:** hero `minmax(0,1.05fr) minmax(0,.95fr)`; steps `56px 1fr 380px`;
-  finding cards `1.25fr .75fr` (one dominant panel plus one supporting, never
-  equal twins); comparison rows `240px 1fr` full-width and stacked, not a card
-  trio.
+- **Grids:** hero `minmax(0,1.05fr) minmax(0,.95fr)`; steps `1fr 420px`;
+  finding panels stack full-width, one per row, and inside each the body is
+  `1.15fr .85fr` (claim, explanation and evidence on the dominant side, the
+  figure and its metrics on the supporting side; never equal columns, never
+  a row of equal cards); comparison rows `240px 1fr 1fr` full-width and
+  stacked, not a card trio.
 - **Radii:** panels 14px, large feature panels 18px, terminal blocks 12px,
   buttons 10px, nav CTA 9px, inner blocks and metrics 8px, chips and badges
   fully rounded (999px).
@@ -218,9 +226,11 @@ placeholder.
 
 ## 8. Brand marks — do not touch
 
-The wordmark is the string `chainopt` in IBM Plex Mono 600, paired with the node
-glyph: an amber filled circle (`#FFB224`) joined by grey strokes (`#94A2BD`) to
-two outlined circles (teal `#3ADFC5` and grey `#94A2BD`). **These hex values are
+The wordmark is the string `ChainOpt` in Archivo 700, paired with the cut-edge
+glyph: two outlined circles on the left (teal `#3ADFC5`, grey `#94A2BD`) running
+into one amber filled circle (`#FFB224`) on the right, the teal edge drawn
+through and the grey edge broken in the middle. It replaced a mark that was the
+share icon every operating system ships. **These hex values are
 part of the mark and do not re-theme with the palette.** If the palette changes,
 the logo colours stay exactly as they are. Never regenerate, recolour, restroke,
 or replace the glyph or wordmark. It lives in `src/components/wordmark.tsx` at
@@ -253,7 +263,7 @@ or replace the glyph or wordmark. It lives in `src/components/wordmark.tsx` at
 
 - [ ] No hardcoded colours outside the fixed literals in §2
 - [ ] Amber = findings/CTA, teal = savings; no semantic drift, no decoration
-- [ ] All data and labels in IBM Plex Mono, all prose in Archivo
+- [ ] All data and labels in Geist Mono, all prose in Archivo
 - [ ] Left-aligned, text constrained to a readable measure
 - [ ] No label above the heading; no ALL-CAPS, no arrows in buttons
 - [ ] Transitions on `--ease-out` / `--ease-inout`, within the duration budget

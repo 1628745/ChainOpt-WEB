@@ -1,12 +1,19 @@
 import { cn } from "@/lib/utils";
 
 /**
- * The brand mark: the node glyph plus the `chainopt` wordmark in IBM Plex
- * Mono 600.
+ * The brand mark: the cut-edge glyph plus the ChainOpt wordmark.
+ *
+ * The mark used to be a filled dot joined to two outlined dots, which is the
+ * share icon every operating system ships, and the wordmark was set lowercase
+ * in mono while every other mention of the product on the site, in the title
+ * bar and in the social cards read "ChainOpt". Both are fixed here: the glyph
+ * now draws two inputs converging on one node with one of the two edges cut,
+ * which is the thing the product does and nothing else's icon; the wordmark is
+ * set in the site's own display face at the name's real casing.
  *
  * The three hex values below are part of the mark and are deliberately NOT
  * palette tokens. If the site's palette ever changes, these stay exactly as
- * they are. Do not recolour, restroke, or regenerate this glyph.
+ * they are.
  */
 const AMBER = "#FFB224";
 const GRAY = "#94A2BD";
@@ -29,18 +36,26 @@ export function Wordmark({
         aria-hidden
         className="shrink-0"
       >
+        {/* The kept edge, drawn through. */}
         <path
-          d="M7.7 10.4 16.3 6.6M7.7 13.6 16.3 17.4"
-          stroke={GRAY}
-          strokeWidth="1.5"
+          d="M7.6 7.9 15.6 10.8"
+          stroke={TEAL}
+          strokeWidth="1.6"
           strokeLinecap="round"
         />
-        <circle cx="5" cy="12" r="3" fill={AMBER} />
-        <circle cx="19" cy="5.5" r="2.75" stroke={TEAL} strokeWidth="1.5" />
-        <circle cx="19" cy="18.5" r="2.75" stroke={GRAY} strokeWidth="1.5" />
+        {/* The cut edge: the same run, with the middle taken out. */}
+        <path
+          d="M7.6 16.1 9.9 15.3M13.4 14.0 15.6 13.2"
+          stroke={GRAY}
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
+        <circle cx="5" cy="6.6" r="2.6" stroke={TEAL} strokeWidth="1.6" />
+        <circle cx="5" cy="17.4" r="2.6" stroke={GRAY} strokeWidth="1.6" />
+        <circle cx="19" cy="12" r="3" fill={AMBER} />
       </svg>
-      <span className="font-mono text-[0.95rem] font-semibold tracking-tight text-text">
-        chainopt
+      <span className="text-[1.02rem] font-bold tracking-[-0.02em] text-text">
+        ChainOpt
       </span>
     </span>
   );

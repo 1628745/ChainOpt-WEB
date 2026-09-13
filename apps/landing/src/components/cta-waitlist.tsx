@@ -1,15 +1,25 @@
 "use client";
 
-import { SectionGlow } from "@/components/section-glow";
 import { track } from "@vercel/analytics";
 import { type FormEvent, useId, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { btn } from "@/components/ui/button";
+import { Button, btn } from "@/components/ui/button";
 import { bookingUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "loading" | "success" | "error";
+
+/**
+ * The last page of the site, and the only one with nothing else on it, so the
+ * card is centred and carries what happens after the form rather than sitting
+ * in the top-left corner of an empty screen.
+ */
+
+const NEXT = [
+  "I read every request myself and reply, usually within a day.",
+  "You get the install line, a signed wheel, and a walkthrough if you want one.",
+  "Your pipeline stays on your machine. I never see your prompts or your source.",
+];
 
 export function CtaWaitlist() {
   const [email, setEmail] = useState("");
@@ -47,7 +57,7 @@ export function CtaWaitlist() {
       setEmail("");
 
       // The one question this site exists to answer. Page views say people
-      // arrived; only this says the site worked. No address is sent -- the
+      // arrived; only this says the site worked. No address is sent: the
       // event carries which page the person came from and nothing else.
       track("waitlist_signup", { path: window.location.pathname });
     } catch {
@@ -57,115 +67,162 @@ export function CtaWaitlist() {
   }
 
   return (
-    <section id="early-access" className="section relative isolate overflow-x-clip border-b border-line">
+    <section
+      id="early-access"
+      className="section relative isolate overflow-x-clip border-b border-line"
+    >
+      {/* No section glow here. It lights the top-left corner of a section
+          because that is where a heading sits; on this page the only heading
+          is inside a centred card, and a glow off to its left read as a
+          smudge on the page rather than as the section coming forward. */}
       <div className="wrap">
-        <SectionGlow />
-        <div className="max-w-[720px] rounded-feature border border-line panel-surface p-8 sm:p-10">
-          <h2>ChainOpt is in private beta</h2>
+        <div className="mx-auto max-w-[720px]">
+          <div className="rounded-feature border border-line panel-surface p-8 sm:p-10">
+            <h2>ChainOpt is in private beta</h2>
 
-          <p className="mt-5 max-w-[58ch] text-[0.98rem] text-muted">
-            I&apos;m looking for a small group of testers to run the analysis
-            engine against real pipelines before a wider release. If your LLM
-            bill is large enough to be worth reducing, put your email in and
-            I&apos;ll get you set up.
-          </p>
+            <p className="mt-5 max-w-[58ch] text-[0.98rem] text-muted">
+              I&apos;m looking for a small group of testers to run the analysis
+              engine against real pipelines before a wider release. If your LLM
+              bill is large enough to be worth reducing, put your email in and
+              I&apos;ll get you set up.
+            </p>
 
-          <form onSubmit={handleSubmit} className="mt-8">
-            <label htmlFor={inputId} className="sr-only">
-              Work email
-            </label>
+            <form onSubmit={handleSubmit} className="mt-8">
+              {/*
+                A visible label, not a placeholder standing in for one. A
+                placeholder disappears the moment someone starts typing, which
+                is exactly when they might want to check what the field wanted.
+              */}
+              <label
+                htmlFor={inputId}
+                className="block font-mono text-[0.76rem] text-muted"
+              >
+                Work email
+              </label>
 
-            <div
-              aria-hidden
-              className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
-            >
-              <label htmlFor={`${inputId}-hp`}>Company website</label>
-              <input
-                id={`${inputId}-hp`}
-                type="text"
-                name="company_website"
-                value={botField}
-                onChange={(event) => setBotField(event.target.value)}
-                tabIndex={-1}
-                autoComplete="off"
-              />
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <input
-                id={inputId}
-                type="email"
-                name="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@company.com"
-                required
-                autoComplete="email"
-                disabled={pending || done}
-                aria-describedby={message ? messageId : undefined}
-                aria-invalid={status === "error" || undefined}
-                className={cn(
-                  "min-w-0 flex-1 rounded-btn border border-line-strong bg-ink px-4 py-[13px] text-[0.95rem] text-text",
-                  "placeholder:text-muted",
-                  "transition-colors duration-150 ease-out focus:border-amber",
-                  "disabled:cursor-not-allowed disabled:opacity-60",
-                  status === "error" && "border-amber",
-                )}
-              />
-              <Button type="submit" disabled={pending || done}>
-                {pending ? "Sending" : done ? "Sent" : "Request access"}
-              </Button>
-            </div>
-          </form>
-
-          <p className="mt-4 text-[0.85rem] text-muted">
-            No newsletter, no sharing your address, and replies are personal.
-          </p>
-
-          {/*
-            For a tool at this stage every qualified visitor is worth a
-            conversation, and some people would rather talk than wait for a
-            reply. Absent entirely when no link is configured -- an "or" with
-            nothing after it is worse than no branch at all.
-
-            Linked, not embedded: a scheduling iframe is a large third-party
-            bundle and a tracker on a page whose whole argument is that
-            ChainOpt does not phone home.
-          */}
-          {bookingUrl ? (
-            <>
               <div
                 aria-hidden
-                className="my-7 flex items-center gap-4 font-mono text-[0.74rem] text-muted"
+                className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
               >
-                <span className="h-px flex-1 bg-line" />
-                or
-                <span className="h-px flex-1 bg-line" />
+                <label htmlFor={`${inputId}-hp`}>Company website</label>
+                <input
+                  id={`${inputId}-hp`}
+                  type="text"
+                  name="company_website"
+                  value={botField}
+                  onChange={(event) => setBotField(event.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
               </div>
 
-              <a
-                href={bookingUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className={btn({ variant: "ghost" })}
-              >
-                Book a 20-min walkthrough
-              </a>
-            </>
-          ) : null}
+              <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+                <input
+                  id={inputId}
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="you@company.com"
+                  required
+                  autoComplete="email"
+                  disabled={pending || done}
+                  aria-describedby={message ? messageId : undefined}
+                  aria-invalid={status === "error" || undefined}
+                  /*
+                   * Focus is the site-wide amber ring and nothing else. The
+                   * field also turned its own border amber on focus, which
+                   * drew two amber rectangles a couple of pixels apart. The
+                   * border is left to mean one thing: an error.
+                   */
+                  className={cn(
+                    "min-w-0 flex-1 rounded-btn border border-line-strong bg-ink px-4 py-[13px] text-[0.95rem] text-text caret-amber",
+                    "placeholder:text-muted",
+                    "transition-colors duration-150 ease-out",
+                    "disabled:cursor-not-allowed disabled:opacity-60",
+                    status === "error" && "border-amber",
+                  )}
+                />
+                <Button type="submit" disabled={pending || done}>
+                  {pending ? "Sending" : done ? "Sent" : "Request access"}
+                </Button>
+              </div>
+            </form>
 
-          <p
-            id={messageId}
-            role={status === "error" ? "alert" : "status"}
-            aria-live={status === "error" ? "assertive" : "polite"}
-            className={cn(
-              "mt-4 font-mono text-[0.8rem]",
-              !message && "sr-only",
-              status === "error" ? "text-amber" : "text-teal",
-            )}
-          >
-            {message}
-          </p>
+            <p className="mt-4 text-[0.85rem] text-muted">
+              No newsletter, no sharing your address, and replies are personal.
+            </p>
+
+            {/*
+              For a tool at this stage every qualified visitor is worth a
+              conversation, and some people would rather talk than wait for a
+              reply. Absent entirely when no link is configured, since an "or"
+              with nothing after it is worse than no branch at all.
+
+              Linked, not embedded: a scheduling iframe is a large third-party
+              bundle and a tracker on a page whose whole argument is that
+              ChainOpt does not phone home.
+            */}
+            {bookingUrl ? (
+              <>
+                <div
+                  aria-hidden
+                  className="my-7 flex items-center gap-4 font-mono text-[0.74rem] text-muted"
+                >
+                  <span className="h-px flex-1 bg-line" />
+                  or
+                  <span className="h-px flex-1 bg-line" />
+                </div>
+
+                <a
+                  href={bookingUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={btn({ variant: "ghost" })}
+                >
+                  Book a 20-min walkthrough
+                </a>
+              </>
+            ) : null}
+
+            <p
+              id={messageId}
+              role={status === "error" ? "alert" : "status"}
+              aria-live={status === "error" ? "assertive" : "polite"}
+              className={cn(
+                "mt-4 font-mono text-[0.8rem]",
+                !message && "sr-only",
+                status === "error" ? "text-amber" : "text-teal",
+              )}
+            >
+              {message}
+            </p>
+          </div>
+
+          {/* Prose in the site's own voice, so Archivo, not the lowercase
+              mono kicker it used to be. The numerals are metadata and sit in
+              muted mono; they were amber, which made three promises look
+              like three findings. */}
+          <div className="mt-8">
+            <h3>What happens next</h3>
+            <ol className="mt-3 flex flex-col gap-2.5">
+              {NEXT.map((line, i) => (
+                <li
+                  key={line}
+                  className="flex gap-3 text-[0.95rem] text-muted"
+                >
+                  <span
+                    aria-hidden
+                    data-numeric
+                    className="shrink-0 pt-px text-[0.8rem] text-muted"
+                  >
+                    {i + 1}
+                  </span>
+                  {line}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
     </section>

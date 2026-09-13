@@ -19,8 +19,6 @@ const LEAD_MS = 160;
 
 export type Segment = {
   text: string;
-  /** Renders muted and heavy -- the setup half of a two-part headline. */
-  dim?: boolean;
 };
 
 export function KineticHeadline({
@@ -48,7 +46,7 @@ export function KineticHeadline({
         const { words } = segment;
 
         return (
-          <span key={segment.text} className={segment.dim ? "dim" : undefined}>
+          <span key={segment.text}>
             {words.map((word, w) => {
               const index = segment.offset + w;
               const delay = LEAD_MS + index * WORD_MS;

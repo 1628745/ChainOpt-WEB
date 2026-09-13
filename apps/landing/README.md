@@ -104,12 +104,13 @@ Colour is semantic and never decorative:
 
 The two accents never swap meanings and never sit adjacent at full saturation.
 
-Type is two families: Archivo for display and body, IBM Plex Mono for anything the
-product would print as data -- code, labels, metrics, metadata, section kickers.
+Type is two families: Archivo for display and body, Geist Mono for anything the
+product would print as data -- code, labels, metrics, metadata.
 
 Layout is left-aligned throughout, capped at 1120px by `.wrap`, with two
-breakpoints: 940px (`md:`, grids collapse) and 640px (`sm:`, spacing shrinks and
-non-CTA nav links hide).
+breakpoints: 940px (`md:`, grids collapse) and 640px (`sm:`, spacing shrinks, the
+nav moves into a menu, and the pipeline graph is replaced by the same steps set
+as type).
 
 The site is four routes -- `/`, `/how-it-works`, `/pricing`, `/early-access` --
 each assembled in `src/app/<route>/page.tsx` from the section components in

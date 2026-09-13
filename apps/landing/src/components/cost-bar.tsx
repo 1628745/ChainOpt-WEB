@@ -2,79 +2,39 @@
 
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 
-import { useReducedMotion } from "@/lib/use-reduced-motion";
+import { MONTHLY, OPTIMIZED, RECOVERABLE } from "@/lib/demo";
 import { cn } from "@/lib/utils";
 
 /**
- * The two findings above, stated as one picture: what the pipeline costs a
- * month now, and what it costs with both applied.
+ * The two cost findings above, stated as one picture: what the pipeline costs
+ * a month now, and what it costs with both applied.
  *
- * The bars carry the argument the prose has been making -- the amber segment
- * is the part of the current bill that is waste, and the teal bar is what is
- * left once it is gone. Amber and teal keep meaning exactly what they mean
- * everywhere else on the page.
+ * Both segments of the current bar are painted and both are named. The bar
+ * used to draw only its amber part, leaving the rest of the spend the same
+ * colour as the empty track, so a bar that was mostly cost read as a bar that
+ * was mostly empty.
  *
  * Deliberately divs rather than a chart: two bars and two numbers do not need
- * a charting library, an SVG, or an axis.
+ * a charting library, an SVG, or an axis. The figures are printed rather than
+ * counted up, so no frame of the animation shows an amount that is not true.
  */
 
-const CURRENT = 142.8;
-const RECOVERABLE = 59.6;
-const OPTIMISED = CURRENT - RECOVERABLE;
+const pct = (value: number) => `${(value / MONTHLY) * 100}%`;
 
-const GROW_MS = 700;
-/** The waste fills after the bars land, so the eye arrives on it last. */
-const WASTE_DELAY_MS = 200;
+const money = (value: number) =>
+  value.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  });
 
-const pct = (value: number) => `${(value / CURRENT) * 100}%`;
-
-/**
- * The figure counts with its own bar over the same 700ms rather than on an
- * independent clock, so the number lands exactly as the bar stops growing.
- */
-function Amount({ value, lit }: { value: number; lit: boolean }) {
-  const out = useRef<HTMLSpanElement>(null);
-  const reduced = useReducedMotion();
-  const final = value.toFixed(2);
-
-  useEffect(() => {
-    const node = out.current;
-    if (!node || !lit || reduced) return;
-
-    let frame = 0;
-    let startedAt = 0;
-    const step = (now: number) => {
-      startedAt ||= now;
-      const t = Math.min((now - startedAt) / GROW_MS, 1);
-      // Ease-out cubic, matching the curve the bar itself grows on.
-      node.textContent = (value * (1 - Math.pow(1 - t, 3))).toFixed(2);
-      if (t < 1) frame = requestAnimationFrame(step);
-    };
-    node.textContent = (0).toFixed(2);
-    frame = requestAnimationFrame(step);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      node.textContent = value.toFixed(2);
-    };
-  }, [lit, reduced, value]);
-
+function Amount({ value }: { value: number }) {
   return (
-    <span className="text-[1.15rem] font-bold tracking-[-0.02em] text-text">
-      $
-      {/* A hidden copy at the final value holds the width, so the row does not
-          shuffle as the integer part gains a digit. */}
-      <span className="inline-grid">
-        <span aria-hidden className="invisible col-start-1 row-start-1">
-          {final}
-        </span>
-        <span
-          ref={out}
-          className="col-start-1 row-start-1 text-left [font-variant-numeric:tabular-nums]"
-        >
-          {final}
-        </span>
-      </span>
+    <span
+      data-numeric
+      className="text-[1.05rem] font-bold tracking-[-0.02em] text-text"
+    >
+      {money(value)}
     </span>
   );
 }
@@ -101,44 +61,57 @@ export function CostBar({ className }: { className?: string }) {
   }, []);
 
   return (
-    <div ref={host} className={cn("max-w-[620px]", className)}>
-      <div className="grid grid-cols-[88px_1fr_auto] items-center gap-x-5 gap-y-4">
+    <div ref={host} className={cn("max-w-[680px]", className)}>
+      <div className="grid grid-cols-[96px_1fr_auto] items-center gap-x-5 gap-y-4">
         <span className="font-mono text-[0.8rem] text-muted">current</span>
         <div className="h-9 overflow-hidden rounded-inner bg-surface-2">
+          {/* Clipped to its own width so the segments inside cannot paint their
+              borders and padding as a sliver before the bar has grown. */}
           <div
-            className="cost-fill flex h-full justify-end"
+            className="cost-fill flex h-full overflow-hidden"
             style={{ "--to": "100%" } as CSSProperties}
             data-lit={lit || undefined}
           >
-            {/* The waste, at the end of the bar: the part of this month's
-                bill the two findings above account for. */}
+            {/* What the pipeline would still cost with both findings applied,
+                and then the part of the bill the findings account for. */}
             <div
-              className="cost-waste h-full bg-amber-dim"
-              style={
-                {
-                  "--to": pct(RECOVERABLE),
-                  "--delay": `${WASTE_DELAY_MS}ms`,
-                } as CSSProperties
-              }
-              data-lit={lit || undefined}
+              className="h-full border-y border-l border-teal-line bg-teal/15"
+              style={{ width: pct(OPTIMIZED) }}
             />
+            {/* The waste, labelled where it is rather than in a key the eye
+                has to travel to and match by colour. */}
+            <div className="flex h-full min-w-0 flex-1 items-center justify-end overflow-hidden border-y border-r border-amber-line bg-amber/22 pr-2.5">
+              <span
+                data-numeric
+                className="text-[0.74rem] whitespace-nowrap text-amber"
+              >
+                {money(RECOVERABLE)}
+              </span>
+            </div>
           </div>
         </div>
-        <Amount value={CURRENT} lit={lit} />
+        <Amount value={MONTHLY} />
 
         <span className="font-mono text-[0.8rem] text-muted">optimized</span>
         <div className="h-9 overflow-hidden rounded-inner bg-surface-2">
           <div
-            className="cost-fill h-full rounded-inner border bg-teal-dim"
-            style={{ "--to": pct(OPTIMISED) } as CSSProperties}
+            className="cost-fill h-full rounded-inner border bg-teal/15"
+            style={{ "--to": pct(OPTIMIZED) } as CSSProperties}
             data-lit={lit || undefined}
           />
         </div>
-        <Amount value={OPTIMISED} lit={lit} />
+        <Amount value={OPTIMIZED} />
       </div>
 
-      <p className="mt-3 text-[0.8rem] text-muted">
-        Illustrative — based on the two findings above.
+      <p className="mt-4 max-w-[64ch] text-[0.88rem] text-text">
+        <span className="text-amber">Amber</span> is what the two cost findings
+        above account for. <span className="text-teal">Teal</span> is what the
+        pipeline still costs once both are applied.
+      </p>
+
+      <p className="mt-2 max-w-[64ch] text-[0.82rem] text-muted">
+        The parallelism finding returns time rather than spend, so it is not in
+        these bars.
       </p>
     </div>
   );

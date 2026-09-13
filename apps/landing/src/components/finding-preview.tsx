@@ -1,112 +1,222 @@
 import { CostBar } from "@/components/cost-bar";
-import { Evidence } from "@/components/evidence";
+import { Evidence, type EvidenceItem } from "@/components/evidence";
 import { SectionGlow } from "@/components/section-glow";
 import { QUOTES, Testimonial } from "@/components/testimonial";
 import {
-  Badge,
-  MetricChip,
+  Gain,
+  Kind,
+  Metric,
+  Metrics,
   Panel,
   PanelBody,
   PanelFoot,
   PanelHead,
-  SavingsLine,
 } from "@/components/ui/primitives";
+import {
+  LATENCY_SAVED,
+  OVERSIZING_MONTHLY,
+  REDUNDANCY_MONTHLY,
+  RUNS,
+} from "@/lib/demo";
 
-const evidence = [
+/**
+ * All three findings from the worked example, in the shape the product prints
+ * them. Every card carries the same parts in the same order, including the
+ * evidence toggle: a card that cannot show its working looks like the one
+ * finding that has none.
+ *
+ * The third card is a parallelism finding, and it reports seconds rather than
+ * dollars. Running two independent steps at the same time does not lower the
+ * bill, and quoting it in money to keep the row tidy would be a lie about what
+ * the tool found.
+ */
+
+type Card = {
+  id: string;
+  kind: string;
+  tone: "amber" | "teal";
+  title: string;
+  value: string;
+  unit: string;
+  metrics: Array<[label: string, value: string]>;
+  body: string;
+  evidence: EvidenceItem[];
+  method: string;
+};
+
+const runs = RUNS.toLocaleString("en-US");
+
+const CARDS: Card[] = [
   {
-    step: "step 3 · sonnet",
-    prompt: "Summarise the ticket below in two sentences for triage...",
+    id: "redundancy",
+    kind: "redundancy",
+    tone: "amber",
+    title: "Steps 3 and 6 do the same work",
+    value: `+$${REDUNDANCY_MONTHLY.toFixed(2)}`,
+    unit: "/mo recoverable",
+    metrics: [
+      ["prompt similarity", "0.94"],
+      ["output similarity", "0.89"],
+      ["duplicate calls", runs],
+    ],
+    body: "Both calls send near-identical prompts and return summaries with the same structure. Step 6 can most likely be dropped and its downstream context filled from step 3's response.",
+    evidence: [
+      {
+        step: "step 3 · sonnet",
+        prompt:
+          "Summarize the ticket below in two sentences for triage. State the customer's problem and what they have already tried.",
+        response:
+          "The customer cannot complete checkout: the payment step returns a generic error after they enter card details. They have retried on two browsers and cleared their cache.",
+      },
+      {
+        step: "step 6 · sonnet",
+        prompt:
+          "Give a two-sentence summary of this ticket so it can be routed. Cover the problem and any steps the customer already took.",
+        response:
+          "Checkout fails for this customer with an unspecified error once card details are submitted. They have already tried a second browser and cleared their cache.",
+      },
+    ],
+    method:
+      "Matched by prompt embedding, then confirmed against output structure.",
   },
   {
-    step: "step 6 · sonnet",
-    prompt: "Give a two-sentence summary of this ticket so it can be routed...",
+    id: "oversizing",
+    kind: "oversizing",
+    tone: "amber",
+    title: "Step 4 sends a filled-in template to a frontier model",
+    value: `+$${OVERSIZING_MONTHLY.toFixed(2)}`,
+    unit: "/mo recoverable",
+    metrics: [
+      ["current model", "opus"],
+      ["cheapest match", "haiku"],
+      ["output match", "0.99"],
+    ],
+    body: "The step's outputs never deviate from a fixed shape and the prompt supplies every value, so the task does not need the model it is being sent to. ChainOpt replays the observed calls against smaller models and names the cheapest one that reproduced the same outputs.",
+    evidence: [
+      {
+        step: "step 4 · opus",
+        prompt:
+          "Return a JSON routing plan with keys queue, priority and owner. queue is one of billing, technical or account. Ticket category: billing. Severity: 2. Region: EU.",
+        response:
+          '{"queue": "billing", "priority": "P2", "owner": "billing-eu"}',
+      },
+      {
+        step: "step 4 · haiku, replayed",
+        prompt:
+          "Return a JSON routing plan with keys queue, priority and owner. queue is one of billing, technical or account. Ticket category: billing. Severity: 2. Region: EU.",
+        response:
+          '{"queue": "billing", "priority": "P2", "owner": "billing-eu"}',
+      },
+    ],
+    method:
+      "Detected from output-schema stability, then replayed against smaller models.",
+  },
+  {
+    id: "parallelism",
+    kind: "parallelism",
+    tone: "teal",
+    title: "Step 5 waits on step 3 and never reads it",
+    value: `-${LATENCY_SAVED}`,
+    unit: "per run, no change to spend",
+    metrics: [
+      ["time spent waiting", LATENCY_SAVED],
+      ["values passed on", "none"],
+      ["safe to reorder", "yes"],
+    ],
+    body: "Step 5 is awaited after step 3 because of how the two were written, not because it needs anything step 3 produces. Started together, the pair finishes when the slower of the two finishes rather than when both have run end to end.",
+    evidence: [
+      {
+        step: "step 3 · sonnet, output",
+        prompt: "Summarize the ticket below in two sentences for triage.",
+        response:
+          "The customer cannot complete checkout: the payment step returns a generic error after they enter card details. They have retried on two browsers and cleared their cache.",
+      },
+      {
+        step: "step 5 · haiku, next call",
+        prompt:
+          "Retrieve the three most relevant help-center articles for account_id 41822 and category billing.",
+        response:
+          "kb-2831 Card declined at checkout; kb-1190 Payment retry limits; kb-0442 Updating a saved card.",
+      },
+    ],
+    method:
+      "Derived from the call graph: no value produced by step 3 reaches step 5.",
   },
 ];
 
 export function FindingPreview() {
   return (
-    <section id="finding" className="section relative isolate overflow-x-clip border-b border-line">
+    <section
+      id="finding"
+      className="section relative isolate overflow-x-clip border-b border-line"
+    >
       <div className="wrap">
         <SectionGlow />
-        <h2>What a finding actually looks like</h2>
+        <h2>Three findings from one pipeline</h2>
         <p className="mt-5 max-w-[62ch] text-[1.05rem] text-muted">
-          A finding is a claim with its working shown: what kind of waste it is,
-          how confident the match is, how many real runs it appeared in, and the
-          prompts it was drawn from. Open one to check the reasoning yourself.
+          A finding says what kind of waste it is, how confident the match is,
+          what it is worth, and which calls it was drawn from. Open one and you
+          get the prompts and the responses, so you can check the reasoning
+          before you touch the code.
         </p>
 
-        <div className="mt-11 grid items-start gap-5 md:grid-cols-[1.25fr_0.75fr]">
-          <Panel>
-            <PanelHead>
-              <Badge>redundancy</Badge>
-              <span data-numeric>observed in 847 runs</span>
-            </PanelHead>
+        {/*
+          One finding per row, the way the product lists them. They were three
+          equal columns, which is the one arrangement the design system rules
+          out for finding cards: at a third of the page each card ran to five
+          hundred pixels, the metrics wrapped two-and-one, and the evidence
+          buttons landed at three different heights.
 
-            <PanelBody>
-              <h3 className="max-w-[20ch] text-[clamp(1.35rem,2.4vw,1.7rem)] leading-[1.15] font-bold tracking-[-0.02em] text-text">
-                Steps 3 and 6 do the same work
-              </h3>
+          Inside each panel the body is the documented 1.15fr / .85fr split:
+          the claim, its explanation and the evidence on the dominant side,
+          the figure and its metrics on the supporting side. The supporting
+          column is as narrow as it can be while three metric labels still
+          sit on one row; at .75fr the longer ones wrapped two-and-one again.
+          Below 940px the grid is one column and reads in source order:
+          title, figure, metrics, explanation, evidence.
+        */}
+        <div className="mt-11 flex flex-col gap-5">
+          {CARDS.map((card) => (
+            <Panel key={card.id}>
+              <PanelHead>
+                <Kind tone={card.tone}>{card.kind}</Kind>
+                <span data-numeric>{runs} runs analyzed</span>
+              </PanelHead>
 
-              <SavingsLine amount={38.2} className="mt-5" />
+              <PanelBody className="grid gap-x-12 gap-y-5 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:grid-rows-[auto_auto_1fr]">
+                <h3 className="text-[clamp(1.2rem,2vw,1.45rem)] leading-[1.2] font-bold tracking-[-0.02em] text-text md:col-start-1">
+                  {card.title}
+                </h3>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                <MetricChip label="prompt similarity" value="0.94" />
-                <MetricChip label="output similarity" value="0.89" />
-                <MetricChip label="calls / month" value="1,240" />
-              </div>
+                {/* The figure and what backs it, kept together so they stack
+                    as one column on the right and one block on a phone. */}
+                <div className="flex flex-col gap-5 md:col-start-2 md:row-span-3 md:row-start-1">
+                  <Gain value={card.value} unit={card.unit} />
 
-              <p className="mt-5 max-w-[58ch] text-[1rem] leading-[1.65] text-muted">
-                Both calls send near-identical prompts and return summaries with
-                the same structure. Step 6 can most likely be dropped and its
-                downstream context filled from step 3&apos;s response.
-              </p>
+                  <Metrics>
+                    {card.metrics.map(([label, value]) => (
+                      <Metric key={label} label={label} value={value} />
+                    ))}
+                  </Metrics>
+                </div>
 
-              <Evidence
-                items={evidence}
-                note="matched on embedding cosine similarity, then confirmed against output structure"
-              />
-            </PanelBody>
+                <p className="max-w-[58ch] text-[0.95rem] leading-[1.65] text-muted md:col-start-1">
+                  {card.body}
+                </p>
 
-            <PanelFoot>
-              detected via prompt embedding comparison across 847 recorded runs
-            </PanelFoot>
-          </Panel>
+                <Evidence items={card.evidence} className="md:col-start-1" />
+              </PanelBody>
 
-          <Panel>
-            <PanelHead>
-              <Badge tone="teal">oversizing</Badge>
-              <span data-numeric>observed in 612 runs</span>
-            </PanelHead>
-
-            <PanelBody>
-              <h3 className="max-w-[20ch] text-[clamp(1.35rem,2.4vw,1.7rem)] leading-[1.15] font-bold tracking-[-0.02em] text-text">
-                A frontier model is filling in a template
-              </h3>
-
-              <SavingsLine amount={21.4} className="mt-5" />
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                <MetricChip label="step" value="4" />
-                <MetricChip label="opus → haiku" value="0.99 match" />
-              </div>
-
-              <p className="mt-5 text-[1rem] leading-[1.65] text-muted">
-                The step&apos;s outputs never deviate from a fixed shape and the
-                prompt supplies every value, so the task does not need the model
-                it is being sent to. ChainOpt names the cheaper model that
-                covered the same outputs across the observed runs.
-              </p>
-            </PanelBody>
-
-            <PanelFoot>detected via output-schema stability across runs</PanelFoot>
-          </Panel>
+              <PanelFoot>{card.method}</PanelFoot>
+            </Panel>
+          ))}
         </div>
 
-        <p className="mt-5 text-[0.8rem] text-muted">
-          Illustrative example — not measured results.
+        <p className="mt-5 text-[0.82rem] text-muted">
+          Illustrative example, not measured results.
         </p>
 
-        {/* The two panels above, stated as one picture. */}
+        {/* The two cost findings above, stated as one picture. */}
         <CostBar className="mt-10" />
 
         {/* Renders only once a real quote replaces the placeholder. */}

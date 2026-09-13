@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt =
-  "ChainOpt: find the LLM calls costing you money";
+export const alt = "ChainOpt: find the LLM calls costing you money";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -26,33 +25,27 @@ export default function OpengraphImage() {
           padding: 72,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div
-            style={{
-              width: 16,
-              height: 16,
-              borderRadius: 8,
-              background: AMBER,
-            }}
-          />
-          <div style={{ width: 34, height: 2, background: GRAY }} />
-          <div
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: 7,
-              border: `2px solid ${TEAL}`,
-            }}
-          />
-          <div
-            style={{
-              marginLeft: 10,
-              fontSize: 30,
-              color: TEXT,
-              letterSpacing: 0.5,
-            }}
-          >
-            chainopt
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          {/* The same cut-edge glyph as the site header and the favicon. */}
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M7.6 7.9 15.6 10.8"
+              stroke={TEAL}
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <path
+              d="M7.6 16.1 9.9 15.3M13.4 14.0 15.6 13.2"
+              stroke={GRAY}
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <circle cx="5" cy="6.6" r="2.6" stroke={TEAL} strokeWidth="1.6" />
+            <circle cx="5" cy="17.4" r="2.6" stroke={GRAY} strokeWidth="1.6" />
+            <circle cx="19" cy="12" r="3" fill={AMBER} />
+          </svg>
+          <div style={{ fontSize: 32, color: TEXT, letterSpacing: -0.6 }}>
+            ChainOpt
           </div>
         </div>
 
@@ -66,25 +59,24 @@ export default function OpengraphImage() {
               maxWidth: 940,
             }}
           >
-            Your traces show what the pipeline cost. ChainOpt shows which calls
-            to cut.
+            Your agent pipeline is paying for calls it does not need.
           </div>
           <div
             style={{
               marginTop: 28,
               fontSize: 27,
               color: DIM,
-              maxWidth: 860,
+              maxWidth: 900,
             }}
           >
-            Redundant calls, oversized models, and missed parallelism — with
-            the evidence behind every finding.
+            Redundant calls, oversized models, and steps waiting on each other
+            for no reason, with the evidence behind every finding.
           </div>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ fontSize: 24, color: TEAL }}>$</div>
-          <div style={{ fontSize: 24, color: TEXT }}>pip install chainopt</div>
+          <div style={{ fontSize: 24, color: TEXT }}>chainopt analyze ./src</div>
         </div>
       </div>
     ),
